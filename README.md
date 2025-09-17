@@ -3,5 +3,5 @@
 > [Trello link](https://trello.com/invite/68b697b329af5ab51cf055f0/ATTI7e4a49792d0ed6505ab84f81e367850dA5AD065B)
 
 > [!NOTE]
-> Figma tervező felület, itt lehet az oldalakat megtervezni, [Trello](https://trello.com/invite/68b697b329af5ab51cf055f0/ATTI7e4a49792d0ed6505ab84f81e367850dA5AD065B)-ban a határidő, **ÜGYELJETEK RÁ!**
+> Figma tervező felület, itt lehet az oldalakat megtervezni, [Trello](https://trello.com/invite/68b697b329af5ab51cf055f0/ATTI7e4a49792d0ed6505ab84f81e367850dA5AD065B)-ban a határidő, **ÜGYELJETEK RÁ!** </br>
 > [Figma link](https://www.figma.com/team_invite/redeem/RvYgqEkTn1ra6YEv1WpgUe)

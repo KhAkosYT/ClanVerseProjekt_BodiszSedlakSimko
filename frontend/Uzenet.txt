@@ -1,2 +1,0 @@
-Mashogy nem érzékeli a github desktop a frontend mappát.
-IDE KELL ÍRNI AZ ANGULAR-T

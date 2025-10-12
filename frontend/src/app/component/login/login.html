@@ -1,0 +1,15 @@
+<form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="form-container">
+  <h2>Bejelentkezés</h2>
+  <div class="form-group">
+    <label for="email">Email vagy felhasználónév</label>
+    <input type="text" id="email" name="email" [(ngModel)]="email" required placeholder="Add meg az email címed vagy felhasználóneved"
+    />
+  </div>
+  <div class="form-group">
+    <label for="password">Jelszó</label>
+    <input type="password" id="password" name="password" [(ngModel)]="password" required placeholder="Add meg a jelszavad"/>
+    <p><strong style="color: green;">Ha van már fiókod, jelentkezz be!</strong></p>
+    <p><strong style="color: whitesmoke;">Ha nincs még fiókod, kattints ide a <a routerLink="/registration">regisztrációhoz!</a></strong></p>
+  </div>
+  <button type="submit" [disabled]="!loginForm.form.valid">Bejelentkezés</button>
+</form>

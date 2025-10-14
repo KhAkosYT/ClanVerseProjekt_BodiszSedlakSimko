@@ -4,8 +4,8 @@
   "settings": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": -580.2856,
-    "scrollLeft": -172,
+    "scrollTop": -1130.2856,
+    "scrollLeft": -729,
     "zoomLevel": 0.88,
     "show": 431,
     "database": 4,
@@ -264,17 +264,17 @@
         "name": "profilePicture",
         "comment": "Ha nem tölt fel profilképet, akkor kap egy képed automatikusan",
         "dataType": "VARCHAR(255)",
-        "default": "'/uploadedPictures/default.png'",
+        "default": "'/uploads/default.png'",
         "options": 8,
         "ui": {
           "keys": 0,
           "widthName": 73,
           "widthComment": 339,
           "widthDataType": 81,
-          "widthDefault": 169
+          "widthDefault": 119
         },
         "meta": {
-          "updateAt": 1759993319181,
+          "updateAt": 1760336688026,
           "createAt": 1759993222752
         }
       },
@@ -670,7 +670,7 @@
           "columnIds": [
             "EgweAECfOqcLtYm9vK_jd"
           ],
-          "x": 1138.4009,
+          "x": 1113.4009,
           "y": 1212.4428,
           "direction": 4
         },

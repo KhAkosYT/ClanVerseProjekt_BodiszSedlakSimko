@@ -12,6 +12,7 @@ const config = {
         password: process.env.DB_PASSWORD || '',
     },
     secretKey: process.env.SECRET_KEY,
+    refreshSecretKey: process.env.REFRESH_SECRET_KEY,
     serverPort: process.env.SERVER_PORT ? parseInt(process.env.SERVER_PORT, 10) : 3000,
     hashIterations: process.env.HASHITERATIONS ? parseInt(process.env.HASHITERATIONS, 10) : 10,
 }

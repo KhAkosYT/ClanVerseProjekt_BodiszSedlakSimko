@@ -12,11 +12,11 @@ const bcrypt = require('bcrypt');
 const app = express();
 app.use(express.json());
 //app.use(express.urlencoded({ extended: true }));
-//app.use(cors());
+app.use(cors());
 
 
 //! törölni kell ezt
-app.use(express.static('public'));
+//app.use(express.static('public'));
 
 sequelize.sync({ alter: true }).then(() => {
     console.log('Az adatbázis szinkronizálva.');

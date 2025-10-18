@@ -8,3 +8,5 @@
 
 > [!NOTE]
 > [Discord szerver link](https://discord.gg/kj8EgFfv4z) (Itt folyik a hívásos-képernyőmegosztásos beszélgetés)
+
+Megjegyzés: 2025. okt. 18-ai commitnál látható egy "merge to main": a Github Desktop valamiért hisztizett amiért elfelejtettem a local commit-et feltölteni a repoba, és Lóri teszt commitját hogy pulloltam összeakadhatott vagy nem is tudom. <br/>

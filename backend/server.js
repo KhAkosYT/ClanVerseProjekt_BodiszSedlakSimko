@@ -1,5 +1,9 @@
 const sequelize = require('./database/sequelize');
 const Users = require('./models/users');
+const Clans = require('./models/clans');
+const ClanMembers = require('./models/clanMembers');
+const Messages = require('./models/messages');
+
 const { Code400, Code401, Code403, Code404, Code409, Code500 } = require('./utils/statusCode');
 const config = require('./utils/config');
 const auth = require('./middleware/auth');
@@ -11,14 +15,13 @@ const bcrypt = require('bcrypt');
 
 const app = express();
 app.use(express.json());
-//app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 
 //! törölni kell ezt
 //app.use(express.static('public'));
 
-sequelize.sync({ alter: true }).then(() => {
+sequelize.sync().then(() => {
     console.log('Az adatbázis szinkronizálva.');
 }).catch((err) => {
     console.error('Hiba az adatbázis szinkronizálásakor:', err);
@@ -69,7 +72,42 @@ app.post('/api/login', async (req, res, next) => {
     }
 });
 
+app.post('/api/logout', auth, (req, res) => {
+    res.status(200).json({ message: "Sikeres kijelentkezés." });
+});
 
+app.post('/api/clans', auth, async (req, res, next) => {
+    const { clanName, game, description } = req.body;
+
+    if(!clanName || !game){
+        return Code400(null, req, res, next, "Hiányzó adatok.");
+    }
+
+    try{
+        const existingClan = await Clans.findOne({ where: { name: clanName}});
+        if(existingClan){
+            return Code409(null, req, res, next, "Már létezik ilyen néven klán.");
+        }
+
+        const newClan = await Clans.create({ name: clanName, game, description, ownerId: req.user.userId});
+        res.status(201).json({ message: "Klán létrehozva" });
+    }
+    catch(err){
+        return Code500(err, req, res, next);
+    }
+});
+
+app.get('/api/clans', async (req, res, next) => {
+    try{
+        const allClans = await Clans.findAll();
+        res.status(200).json({ clans: allClans});
+    }catch(err){
+        return Code500(err, req, res, next)
+    }
+});
+
+
+//! Törölni kell ezt is
 app.get('/tokentest', auth, (req, res) => {
     res.json({ message: "Sikeres hozzáférés a védett erőforráshoz.", user: req.user });
 });

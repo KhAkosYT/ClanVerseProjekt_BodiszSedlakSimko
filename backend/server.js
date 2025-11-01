@@ -31,7 +31,7 @@ sequelize.sync().then(() => {
 
 
 
-app.post('/api/register', async (req, res, next) => {
+app.post('/api/users/register', async (req, res, next) => {
     const { username, email, password } = req.body;
     if(!username || !email || !password){
         return Code400(null, req, res, next, "Hiányzó adatok.");
@@ -39,7 +39,7 @@ app.post('/api/register', async (req, res, next) => {
     try {
         const existingUser = await Users.findOne({ where: { email } });
         if(existingUser){
-            return Code409(null, req, res, next, "Már létező email cím.");
+            return Code409(null, req, res, next, "Már létezik ezzel az email címmel fiók.");
         }
 
         const hashedPassword = await bcrypt.hash(password, config.hashIterations); 
@@ -51,7 +51,7 @@ app.post('/api/register', async (req, res, next) => {
     }
 });
 
-app.post('/api/login', async (req, res, next) => {
+app.post('/api/users/login', async (req, res, next) => {
     const { username, password } = req.body;
     if(!username || !password){
         return Code400(null, req, res, next, "Hiányzó adatok.");
@@ -72,7 +72,7 @@ app.post('/api/login', async (req, res, next) => {
     }
 });
 
-app.post('/api/logout', auth, (req, res) => {
+app.post('/api/users/logout', auth, (req, res) => {
     res.status(200).json({ message: "Sikeres kijelentkezés." });
 });
 

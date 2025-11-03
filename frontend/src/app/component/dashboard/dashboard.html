@@ -1,3 +1,12 @@
-<p>dashboard works!</p>
-<p>{{ tokenSignal() }}</p>
-<input type="submit" value="tokenTest" (click)="tokentest()">
+<div class="dashboard-container">
+  <h2>Dashboard</h2>
+  <p>Üdvözöljük a ClanVerse dashboard-on!</p>
+  <div class="token-display">
+    <p><strong>Token:</strong></p>
+    <p>{{ tokenSignal() }}</p>
+  </div>
+  <div class="button-container">
+    <input type="submit" value="Token test" (click)="tokentest()">
+    <button (click)="logout()">Logout</button>
+  </div>
+</div>

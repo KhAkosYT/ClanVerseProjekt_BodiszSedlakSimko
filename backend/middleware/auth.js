@@ -16,7 +16,7 @@ module.exports = (req, res, next) => {
 
     const token = parts[1];
     if(!config.secretKey){
-        console.warm('Nincs beállítva a SECRET_KEY környezeti változó! (utils/config.js)');
+        console.warn('Nincs beállítva a SECRET_KEY környezeti változó! (utils/config.js)');
     }
 
     try{

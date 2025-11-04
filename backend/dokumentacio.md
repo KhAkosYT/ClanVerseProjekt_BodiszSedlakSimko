@@ -2,7 +2,7 @@
 > Ez a dokumentáció a fejlesztés során bővül, **nem a végleges**!
 > Leginkább a frontenden dolgozónak szeretnék ezzel segíteni
 ___
-## ALAP STÁTUSZKÓD ÜZENETEK 
+## ALAP STÁTUSZKÓD ÜZENETEK [ami saját]([https://youtube.com/](https://github.com/KhAkosYT/ClanVerseProjekt_BodiszSedlakSimko/blob/main/backend/utils/statusCode.js))
 **Magyarul ezt mindig küldi a backend**
 1.  **400** : *message: "Hibás kérés."*
 2.  **401** : *message: "Nincs jogosultsága a felhasználónak"*

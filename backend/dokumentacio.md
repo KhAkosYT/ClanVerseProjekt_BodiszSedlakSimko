@@ -12,8 +12,8 @@ ___
 6.  **500** : *message: "Adatbázis / szerver hiba"*
 ___
 ## VÉGPONTOK
-1. **/api/users/register**
-Elvárt értékek, amiket kér az api végpont
+1. **/api/users/register** <br>
+<ins>**Elvárt értékek**</ins>, amiket kér az api végpont
    - username
    - email
    - password
@@ -26,8 +26,8 @@ Elvárt értékek, amiket kér az api végpont
   - **Ha valahol mégis hiba történne** (és nem tudja a felhasználót lekérdezni az adatbázisból vagy létrehozni azt), akkor **500-as státusz kóddal** tér vissza
 ___
 
-2. **/api/users/login**
-Elvárt értékek, amiket kér az api végpont
+2. **/api/users/login** <br>
+<ins>**Elvárt értékek**</ins>, amiket kér az api végpont
    - username
    - password
   
@@ -44,8 +44,8 @@ ___
 - **200-as státusz kóddal** és ***"Sikeres kijelentkezés."* szövegű *MESSAGE*-el** tér vissza
 ___
 
-4. **/api/clans**
-Elvárt értékek, amiket kér az api végpont
+4. **/api/clans** <br>
+<ins>**Elvárt értékek**</ins>, amiket kér az api végpont
    - clanName
    - game
    - description
@@ -58,11 +58,43 @@ Elvárt értékek, amiket kér az api végpont
   - **Ha valahol mégis hiba történne** (és nem tudja a klánt lekérdezni az adatbázisból vagy létrehozni azt), akkor **500-as státusz kóddal** tér vissza
 ___
 
-5. **/api/clans**  
+5. **/api/clans**
   - HTTP **GET** metódus
 
   - Az **adatbázisból lekéri az összes klánt**, és **visszaküldi** azt egy **"clans" objektumban 200-as státusz kóddal**
-  - **Ha valahol mégis hiba történne** (és nem tudja a klánt lekérdezni az adatbázisból vagy létrehozni azt), akkor **500-as státusz kóddal** tér vissza
+  - **Ha valahol mégis hiba történne** (és nem tudja a klánt lekérdezni az adatbázisból), akkor **500-as státusz kóddal** tér vissza
 ___
 
-6. 
+6. **/api/clans/:id** <br>
+<ins>**Elvárt értékek**</ins>, amiket kér az api végpont
+   - id ({object}; ezt az urlből olvassa ki, ha nem megy úgyis segítek, mert mindenre írtam saját frontend-et)
+
+  - HTTP **GET** metódus
+
+  - Az **adatbázisból lekéri az ADOTT ID-VAL RENDELKEZŐ klánt**, és **visszaküldi** annak az egyednek a **TULAJDONSÁGAIT** egy **"clan" objektumban 200-as státusz kóddal**
+  - **Ha valahol mégis hiba történne** (és nem tudja a klánt lekérdezni az adatbázisból), akkor **500-as státusz kóddal** tér vissza
+___
+
+7. **/api/clans/:id** <br>
+<ins>**Elvárt értékek**</ins>, amiket kér az api végpont
+   - id ({object}; ezt az urlből olvassa ki, ha nem megy úgyis segítek, mert mindenre írtam saját frontend-et)
+   - userId ({object}; ezt a tokenből olvassa ki, ami ugye a localstorage-ben van eltárolva)
+
+  - HTTP **DELETE** metódus
+
+  - Az **adatbázisból lekéri az ADOTT ID-VAL RENDELKEZŐ klánt**, és **kitörli az adott id alapján**, majd ezután **200-as státuszkóddal** visszatér, és egy **"Klán törölve"** MESSAGE üzenettel 
+  - **Ha valahol mégis hiba történne** (és nem tudja a klánt lekérdezni vagy törölni az adatbázisból), akkor **500-as státusz kóddal** tér vissza
+___
+
+8. **/api/clans/:id** <br>
+<ins>**Elvárt értékek**</ins>, amiket kér az api végpont
+   - id ({object}; ezt az urlből olvassa ki, ha nem megy úgyis segítek, mert mindenre írtam saját frontend-et)
+   - userId ({object}; ezt a tokenből olvassa ki, ami ugye a localstorage-ben van eltárolva)
+   - newClanName, !!newGame!!, newClanDescriptio ({object}; ezeket mind a weboldal body részéből kéri)
+
+  - HTTP **PUT** metódus
+
+  - Az **adatbázisból lekéri az ADOTT ID-VAL RENDELKEZŐ klánt**, és ha a felhasználó nem a tulajdonos, akkor **403-as státuszkóddal**, valamint egy **"Nincs jogosultságod a klán módosításához" MESSAGE**-el tér vissza
+  - Ha **ő a tulajdonos**, akkor a **backend kezeli**, hogy **létezik-e a megadott változó, ha igen,** akkor **egyezik-e az adatbázisban tárolt értékkel.** Ha **nem** egyezik, akkor **megváltoztatja, lementi, 200-as státuszkóddal visszatér,** valamint egy **"Klán frissítve." MESSAGE**-el és természetesen **visszaadja a klánt** a frontendnek. 
+  - **Ha valahol mégis hiba történne** (és nem tudja a klánt lekérdezni vagy módosítani az adatbázisban), akkor **500-as státusz kóddal** tér vissza
+___

@@ -156,7 +156,7 @@ app.put('/api/clans/:id', auth, async (req, res, next) => {
     try{
         const { userId } = req.user;
         const { id } = req.params;
-        const { newClanName, newClanDescription } = req.body;
+        const { newClanName, newClanGame, newClanDescription } = req.body;
 
 
         const clan = await Clans.findByPk(id);
@@ -171,6 +171,9 @@ app.put('/api/clans/:id', auth, async (req, res, next) => {
 
         if(newClanName && newClanName != clan.name ){
             clan.name = newClanName;
+        }
+        if(newClanGame && newClanGame != clan.game){
+            clan.game = newClanGame;
         }
         if(newClanDescription && newClanDescription != clan.description){
             clan.description = newClanDescription;

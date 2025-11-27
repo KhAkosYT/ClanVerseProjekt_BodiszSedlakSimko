@@ -15,11 +15,18 @@ const bcrypt = require('bcrypt');
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(
+    cors({
+        origin: 'http://localhost:4200',
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        credentials: true
+    })
+);
 
 
 //! törölni kell ezt
-//app.use(express.static('public'));
+app.use(express.static('public'));
 
 sequelize.sync().then(() => {
     console.log('Az adatbázis szinkronizálva.');
@@ -102,9 +109,82 @@ app.get('/api/clans', async (req, res, next) => {
         const allClans = await Clans.findAll();
         res.status(200).json({ clans: allClans});
     }catch(err){
+        return Code500(err, req, res, next);
+    }
+});
+
+app.get('/api/clans/:id', async (req, res, next) => {
+    try{
+        const { id } = req.params;
+        const clan = await Clans.findByPk(id);
+
+        if(!clan){
+            return Code404("Nincs ilyen klán", req, res, next);
+        }
+
+        res.status(200).json({ clan });
+    }catch(err){
+        console.error(err);
+        return Code500(err, req, res, next);
+    }
+});
+
+app.delete('/api/clans/:id', auth, async (req, res, next) => {
+    try{
+        const { id } = req.params;
+        const { userId } = req.user;
+
+        const clan = await Clans.findByPk(id);
+        
+        if(! clan){
+            return Code404("Nincs ilyen klán", req, res, next);
+        }
+        if(clan.ownerId !== userId){
+            return Code403("Nincs jogosultságod a klán törléséhez", req, res, next);
+        }
+
+        await Clans.destroy({ where: { id } });
+        res.status(200).json({ message: "Klán törölve." });
+    }
+    catch(err){
+        console.error("Hiba a klántörlése során:" + err);
+        return Code500(err, req, res, next);
+    }
+});
+
+app.put('/api/clans/:id', auth, async (req, res, next) => {
+    try{
+        const { userId } = req.user;
+        const { id } = req.params;
+        const { newClanName, newClanDescription } = req.body;
+
+
+        const clan = await Clans.findByPk(id);
+
+        if(!clan){
+            return Code404("Nincs ilyen klán", req, res, next);
+        }
+
+        if(clan.ownerId != userId){
+            Code403("Nincs jogosultságod a klán módosításához", req, res, next);
+        }
+
+        if(newClanName && newClanName != clan.name ){
+            clan.name = newClanName;
+        }
+        if(newClanDescription && newClanDescription != clan.description){
+            clan.description = newClanDescription;
+        }
+
+        await clan.save();
+        res.status(200).json({ message: "Klán frissítve.", clan })
+    }
+    catch(err){
+        console.error("Hiba történt a klán módosítása során: " + err)
         return Code500(err, req, res, next)
     }
 });
+
 
 
 //! Törölni kell ezt is

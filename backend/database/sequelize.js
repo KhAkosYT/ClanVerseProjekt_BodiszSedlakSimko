@@ -9,16 +9,22 @@ const sequelize = new Sequelize(
         host: config.db.host,
         dialect: config.db.dialect,
         logging: console.log,
-        timezone: '+02:00',
+
+        timezone: '+01:00',
+
         dialectOptions: {
             charset: 'utf8mb4',
+            useUTC: false,
+            dateStrings: true,
+            typeCast: true,
         },
+
         define: {
             timestamps: true,
             collate: 'utf8mb4_hungarian_ci',
         },
-});
-
+    }
+);
 
 sequelize
     .authenticate()
@@ -27,6 +33,6 @@ sequelize
     })
     .catch(err => {
         console.error('Nem sikerült a kapcsolat:', err);
-});
+    });
 
 module.exports = sequelize;

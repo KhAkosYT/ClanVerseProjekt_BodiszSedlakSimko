@@ -4,9 +4,9 @@
   "settings": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": -1130.2856,
-    "scrollLeft": -729,
-    "zoomLevel": 0.88,
+    "scrollTop": -966.8333,
+    "scrollLeft": 0,
+    "zoomLevel": 1,
     "show": 431,
     "database": 4,
     "databaseName": "clanverse",
@@ -34,13 +34,16 @@
       "iawKQzCucIfyMiP2RPmzF",
       "9XRa5S0sFLIfDcGYjQ163",
       "kTGVE3_77D64CWc7Hf62N",
-      "jQzlF0G0mm2aWf-WHjpZb"
+      "jQzlF0G0mm2aWf-WHjpZb",
+      "IhMzT53crk41TZua7uJvF"
     ],
     "relationshipIds": [
       "G3_hIhJXykaHoitASpPZn",
       "fnZWiAozybSbqVeSduq5j",
       "UdMiuM_99lA22SasmsOsh",
-      "jXrdt9hA55QXE-yWXXzP1"
+      "jXrdt9hA55QXE-yWXXzP1",
+      "UkzlAVICgnMO3shIU7-o3",
+      "Cd7-e2YocHb_g69zvT8LN"
     ],
     "indexIds": [],
     "memoIds": []
@@ -72,15 +75,15 @@
           "R01yeBQq9ravtlD1yNsJw"
         ],
         "ui": {
-          "x": 744.9009,
-          "y": 1212.4428,
+          "x": 616.994,
+          "y": 1712.4429,
           "zIndex": 2,
           "widthName": 60,
           "widthComment": 60,
           "color": ""
         },
         "meta": {
-          "updateAt": 1759994693125,
+          "updateAt": 1764234408590,
           "createAt": 1759993085097
         }
       },
@@ -92,7 +95,7 @@
           "aT4rqJv1irLz0604PXiKO",
           "VIi37tIzoFHM5t2Gve7WF",
           "x9JMf0wmr9kiVYuLXaZ--",
-          "1uIuZYOOOTzdrD7bFqQOT",
+          "KM56C84TAKULBmpFQY7Ax",
           "x9y7RwOEOLJblR-tHqvvn"
         ],
         "seqColumnIds": [
@@ -100,19 +103,20 @@
           "VIi37tIzoFHM5t2Gve7WF",
           "x9JMf0wmr9kiVYuLXaZ--",
           "1uIuZYOOOTzdrD7bFqQOT",
+          "KM56C84TAKULBmpFQY7Ax",
           "x9y7RwOEOLJblR-tHqvvn",
           "6EOJSKXAGi6YmShl88bC5"
         ],
         "ui": {
-          "x": 949.7595,
-          "y": 859.7442,
+          "x": 852.3594,
+          "y": 1278.4292,
           "zIndex": 16,
           "widthName": 60,
           "widthComment": 60,
           "color": ""
         },
         "meta": {
-          "updateAt": 1759994740126,
+          "updateAt": 1764234905173,
           "createAt": 1759993420074
         }
       },
@@ -123,24 +127,27 @@
         "columnIds": [
           "z4ZXeXsXD5SYSWwDtH_-J",
           "SzLEbe89KKlOr7qWNNNlz",
-          "ZjiO5fQ2_i6oIWHkkqB2R"
+          "WY6pL91wRUXGDLciL4TI5",
+          "5-R0o5W95_c4qnkTiFRdI"
         ],
         "seqColumnIds": [
           "z4ZXeXsXD5SYSWwDtH_-J",
           "SzLEbe89KKlOr7qWNNNlz",
           "ZjiO5fQ2_i6oIWHkkqB2R",
-          "18keSZPzFfarDW0eAMjKq"
+          "18keSZPzFfarDW0eAMjKq",
+          "WY6pL91wRUXGDLciL4TI5",
+          "5-R0o5W95_c4qnkTiFRdI"
         ],
         "ui": {
-          "x": 749.8963,
-          "y": 547.0079,
+          "x": 1438.4405,
+          "y": 1277.2672,
           "zIndex": 31,
           "widthName": 73,
           "widthComment": 60,
           "color": ""
         },
         "meta": {
-          "updateAt": 1759994750139,
+          "updateAt": 1764234908313,
           "createAt": 1759993715316
         }
       },
@@ -152,8 +159,7 @@
           "amWoPii7Rp5gJms-ooWpk",
           "E_4WYSvhSIBI-nbSUW-cW",
           "cVB8qvAJDJ0PlcnFd2mW3",
-          "T4aG7csHUCb3O7tIb7tUN",
-          "iFwGmi-Oi1d-lmHy4a6js"
+          "T4aG7csHUCb3O7tIb7tUN"
         ],
         "seqColumnIds": [
           "amWoPii7Rp5gJms-ooWpk",
@@ -164,16 +170,41 @@
           "iFwGmi-Oi1d-lmHy4a6js"
         ],
         "ui": {
-          "x": 239.5589,
-          "y": 860.1445,
+          "x": 172.5725,
+          "y": 1276.1065,
           "zIndex": 52,
           "widthName": 60,
           "widthComment": 60,
           "color": ""
         },
         "meta": {
-          "updateAt": 1759994753131,
+          "updateAt": 1764235023369,
           "createAt": 1759994223205
+        }
+      },
+      "IhMzT53crk41TZua7uJvF": {
+        "id": "IhMzT53crk41TZua7uJvF",
+        "name": "games",
+        "comment": "csak játékok tárolása",
+        "columnIds": [
+          "AxoHqUmGKAkfHCohkbVA1",
+          "wO7aq57V4wc9g1Weq8Bg6"
+        ],
+        "seqColumnIds": [
+          "AxoHqUmGKAkfHCohkbVA1",
+          "wO7aq57V4wc9g1Weq8Bg6"
+        ],
+        "ui": {
+          "x": 709.2967,
+          "y": 1018.6834,
+          "zIndex": 96,
+          "widthName": 60,
+          "widthComment": 111,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1764234604331,
+          "createAt": 1764234415066
         }
       }
     },
@@ -194,7 +225,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1759993109924,
+          "updateAt": 1764234265696,
           "createAt": 1759993097634
         }
       },
@@ -481,20 +512,20 @@
       "ZjiO5fQ2_i6oIWHkkqB2R": {
         "id": "ZjiO5fQ2_i6oIWHkkqB2R",
         "tableId": "kTGVE3_77D64CWc7Hf62N",
-        "name": "clanMembers",
-        "comment": "json van feltöltve, amiben minden clan tag id-je és csatlakozási dátuma van tárolva",
-        "dataType": "VARCHAR(600)",
+        "name": "userId",
+        "comment": "",
+        "dataType": "INT(11)",
         "default": "",
         "options": 8,
         "ui": {
           "keys": 0,
-          "widthName": 73,
-          "widthComment": 439,
-          "widthDataType": 81,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1759994173017,
+          "updateAt": 1764234252954,
           "createAt": 1759993750215
         }
       },
@@ -657,6 +688,106 @@
           "updateAt": 1759994663440,
           "createAt": 1759994612716
         }
+      },
+      "WY6pL91wRUXGDLciL4TI5": {
+        "id": "WY6pL91wRUXGDLciL4TI5",
+        "tableId": "kTGVE3_77D64CWc7Hf62N",
+        "name": "userId",
+        "comment": "",
+        "dataType": "INT(11)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1764234289070,
+          "createAt": 1764234278923
+        }
+      },
+      "5-R0o5W95_c4qnkTiFRdI": {
+        "id": "5-R0o5W95_c4qnkTiFRdI",
+        "tableId": "kTGVE3_77D64CWc7Hf62N",
+        "name": "role",
+        "comment": "aki a klánt csinálja, az leader role-t kap",
+        "dataType": "VARCHAR(100)",
+        "default": "member",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 206,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1764234349878,
+          "createAt": 1764234303142
+        }
+      },
+      "AxoHqUmGKAkfHCohkbVA1": {
+        "id": "AxoHqUmGKAkfHCohkbVA1",
+        "tableId": "IhMzT53crk41TZua7uJvF",
+        "name": "id",
+        "comment": "",
+        "dataType": "INT(11)",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 1,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1764234466431,
+          "createAt": 1764234447428
+        }
+      },
+      "wO7aq57V4wc9g1Weq8Bg6": {
+        "id": "wO7aq57V4wc9g1Weq8Bg6",
+        "tableId": "IhMzT53crk41TZua7uJvF",
+        "name": "game",
+        "comment": "",
+        "dataType": "VARCHAR(200)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1764234616475,
+          "createAt": 1764234471621
+        }
+      },
+      "KM56C84TAKULBmpFQY7Ax": {
+        "id": "KM56C84TAKULBmpFQY7Ax",
+        "tableId": "9XRa5S0sFLIfDcGYjQ163",
+        "name": "gameId",
+        "comment": "",
+        "dataType": "INT(11)",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1764234636366,
+          "createAt": 1764234628068
+        }
       }
     },
     "relationshipEntities": {
@@ -670,8 +801,8 @@
           "columnIds": [
             "EgweAECfOqcLtYm9vK_jd"
           ],
-          "x": 1113.4009,
-          "y": 1212.4428,
+          "x": 985.494,
+          "y": 1712.4429,
           "direction": 4
         },
         "end": {
@@ -679,8 +810,8 @@
           "columnIds": [
             "VIi37tIzoFHM5t2Gve7WF"
           ],
-          "x": 1146.2595000000001,
-          "y": 1035.7442,
+          "x": 1048.8594,
+          "y": 1454.4292,
           "direction": 8
         },
         "meta": {
@@ -698,18 +829,18 @@
           "columnIds": [
             "aT4rqJv1irLz0604PXiKO"
           ],
-          "x": 1146.2595000000001,
-          "y": 859.7442,
-          "direction": 4
+          "x": 1245.3594,
+          "y": 1366.4292,
+          "direction": 2
         },
         "end": {
           "tableId": "kTGVE3_77D64CWc7Hf62N",
           "columnIds": [
             "SzLEbe89KKlOr7qWNNNlz"
           ],
-          "x": 1138.8962999999999,
-          "y": 675.0079,
-          "direction": 8
+          "x": 1438.4405,
+          "y": 1315.2672,
+          "direction": 1
         },
         "meta": {
           "updateAt": 1759993766555,
@@ -726,8 +857,8 @@
           "columnIds": [
             "aT4rqJv1irLz0604PXiKO"
           ],
-          "x": 949.7595,
-          "y": 947.7442,
+          "x": 852.3594,
+          "y": 1366.4292,
           "direction": 1
         },
         "end": {
@@ -735,8 +866,8 @@
           "columnIds": [
             "E_4WYSvhSIBI-nbSUW-cW"
           ],
-          "x": 778.5589,
-          "y": 948.1445,
+          "x": 564.5725,
+          "y": 1352.1065,
           "direction": 2
         },
         "meta": {
@@ -754,8 +885,8 @@
           "columnIds": [
             "EgweAECfOqcLtYm9vK_jd"
           ],
-          "x": 744.9009,
-          "y": 1336.4428,
+          "x": 616.994,
+          "y": 1836.4429,
           "direction": 1
         },
         "end": {
@@ -763,13 +894,69 @@
           "columnIds": [
             "cVB8qvAJDJ0PlcnFd2mW3"
           ],
-          "x": 509.0589,
-          "y": 1036.1444999999999,
+          "x": 368.5725,
+          "y": 1428.1065,
           "direction": 8
         },
         "meta": {
           "updateAt": 1759994305516,
           "createAt": 1759994305516
+        }
+      },
+      "UkzlAVICgnMO3shIU7-o3": {
+        "id": "UkzlAVICgnMO3shIU7-o3",
+        "identification": false,
+        "relationshipType": 2,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "iawKQzCucIfyMiP2RPmzF",
+          "columnIds": [
+            "EgweAECfOqcLtYm9vK_jd"
+          ],
+          "x": 1353.9940000000001,
+          "y": 1836.4429,
+          "direction": 2
+        },
+        "end": {
+          "tableId": "kTGVE3_77D64CWc7Hf62N",
+          "columnIds": [
+            "WY6pL91wRUXGDLciL4TI5"
+          ],
+          "x": 1438.4405,
+          "y": 1391.2672,
+          "direction": 1
+        },
+        "meta": {
+          "updateAt": 1764234278924,
+          "createAt": 1764234278924
+        }
+      },
+      "Cd7-e2YocHb_g69zvT8LN": {
+        "id": "Cd7-e2YocHb_g69zvT8LN",
+        "identification": false,
+        "relationshipType": 2,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "IhMzT53crk41TZua7uJvF",
+          "columnIds": [
+            "AxoHqUmGKAkfHCohkbVA1"
+          ],
+          "x": 1095.2966999999999,
+          "y": 1070.6834,
+          "direction": 2
+        },
+        "end": {
+          "tableId": "9XRa5S0sFLIfDcGYjQ163",
+          "columnIds": [
+            "KM56C84TAKULBmpFQY7Ax"
+          ],
+          "x": 1048.8594,
+          "y": 1278.4292,
+          "direction": 4
+        },
+        "meta": {
+          "updateAt": 1764234628069,
+          "createAt": 1764234628069
         }
       }
     },

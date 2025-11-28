@@ -28,4 +28,18 @@ export const routes: Routes = [
       .then(mod => mod.Dashboard);
     }
   },
+
+  { path: 'clans',
+    loadComponent() {
+      return import('./component/clans/clans')
+      .then(mod => mod.Clans);
+    }
+  },
+
+   { path: 'createclan',
+    loadComponent() {
+      return import('./component/createclan/createclan')
+      .then(mod => mod.Createclan);
+    }
+   },
 ];

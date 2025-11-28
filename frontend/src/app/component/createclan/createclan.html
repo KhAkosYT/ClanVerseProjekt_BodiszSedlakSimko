@@ -1,0 +1,12 @@
+<p>createclan works!</p>
+<p routerLink="/fooldal">fooldal</p>
+<form (ngSubmit)="onSubmit()" #createclanForm="ngForm" class="form-container">
+        <label for="clanName">clanName</label>
+        <input type="text" name="clanName" id="clanName" [(ngModel)]="clanname" required >
+        <label for="game">Game</label>
+        <input type="text" name="game" id="game" [(ngModel)]="gamename" required>
+        <label for="description">description</label>
+        <textarea name="description" id="description" [(ngModel)]="description" required></textarea>
+        <input type="submit" value="Create Clan" id="createClanBtn" [disabled]="!createclanForm.form.valid" >
+    </form>
+    <input type="submit" value="logout" id="logout" name="logout">

@@ -18,7 +18,7 @@ export class Login {
 
   onSubmit() {
     const loginData = { username: this.username, password: this.password };
-    this.http.post('http://localhost:3000/api/login', loginData).subscribe({
+    this.http.post('http://localhost:3000/api/users/login', loginData).subscribe({
       next: (response: any) => {
         console.log('Sikeres bejelentkezés:', response);
         

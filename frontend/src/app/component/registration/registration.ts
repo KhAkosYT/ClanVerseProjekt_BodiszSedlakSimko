@@ -24,7 +24,7 @@ export class Registration {
       return;
     }
     const registerData = { username: this.username, email: this.email, password: this.password };
-    this.http.post('http://localhost:3000/api/register', registerData).subscribe({
+    this.http.post('http://localhost:3000/api/users/register', registerData).subscribe({
       next: (response: any) => {
         console.log('Sikeres regisztráció:', response);
         window.location.href = '/login';

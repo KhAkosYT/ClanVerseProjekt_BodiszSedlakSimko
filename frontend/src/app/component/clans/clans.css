@@ -1,0 +1,11 @@
+.clans-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.clan-details-container{
+    /* this is the modals selector */
+}

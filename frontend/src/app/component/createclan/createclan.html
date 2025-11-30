@@ -10,3 +10,11 @@
         <input type="submit" value="Create Clan" id="createClanBtn" [disabled]="!createclanForm.form.valid" >
     </form>
     <input type="submit" value="logout" id="logout" name="logout">
+
+    <div *ngIf="showModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Bejelentkezés szükséges!</h2>
+            <p>Ahhoz hogy klánt hozz létre, jelentkezz be.</p>
+            <button (click)="goToLogin()">Bejelentkezés</button>
+        </div>
+    </div>

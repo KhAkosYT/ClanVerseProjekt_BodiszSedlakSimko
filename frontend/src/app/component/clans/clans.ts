@@ -52,7 +52,7 @@ export class Clans implements OnInit {
             }
           };
 
-          //document.body.appendChild(cardBodyDiv);
+          //document.body.appendChild(buttonDiv);
         },
         error: (err) => {
           this.error = 'Hiba történt a kérés során: ' + err.message;
@@ -72,17 +72,16 @@ export class Clans implements OnInit {
         'Authorization': `Bearer ${this.token}`  
       });
     
-      console.log(typeof clanId);
-      console.log('Fetching details for clan ID:', clanId);
-
       this.http.get(`http://localhost:3000/api/clans/${clanId}`, { headers }).subscribe({
         next: (data) => {
-          console.log('Clan details received:', data);
           const innerClanData = data as any; // Objektum, ami listát tartalmaz
           const clanData = innerClanData.clan;
+          const allMembers = innerClanData.allMembers;
 
           const clanDetailsContainer = document.querySelector('.clan-details-container');
           if (clanDetailsContainer) {
+            console.log(innerClanData)
+            
             clanDetailsContainer.innerHTML = `
                   <div class="card-body">
                     <h5 class="card-title">${clanData.name}</h5>
@@ -91,15 +90,43 @@ export class Clans implements OnInit {
                     <div class="members">
                       <!-- ide jönnek a tagok -->
                     </div>
-                    <a class="card-link" id="openClan">belepes</a>
+                    <div class="buttons">
+                      
+                    </div>
                   </div>
             `;
-
-
-            if(innerClanData.editable){
-              const cardBodyDiv = document.querySelector('.card-body');
-              // Ide kell írni majd a 2 gombot (torles, szerkesztes)
+            const membersDiv = document.querySelector('.members');
+            if(membersDiv){
+              for(const member of allMembers){
+                const p = document.createElement('p');
+                p.innerHTML = `${member}`;
+                membersDiv.appendChild(p);
+              }
             }
+
+            const buttonDiv = document.querySelector('.buttons');
+            if(buttonDiv) {
+              if(innerClanData.editable){
+                buttonDiv.innerHTML = `
+                  <button (click)="updateClan(id)">Klán módosítása</button>
+                  <button (click)="deleteClan(id)">Klán törlése</button>
+                  <button (click)="leaveClan(id)">Kilépés a klánból</button>
+                `;
+              }
+              if(innerClanData.canJoin === false){
+                buttonDiv.innerHTML = `
+                  <button (click)="leaveClan(id)">Kilépés a klánból</button>
+                `;
+              }
+              if(innerClanData.canJoin === true){
+                buttonDiv.innerHTML = `
+                  <button (click)="joinClan(id)">Belépés a klánba</button>
+                `;
+              }
+            }
+            
+
+            
           }
         },
         error: (err) => {
@@ -109,4 +136,7 @@ export class Clans implements OnInit {
       });
     }
   }
+
+  
+
 }

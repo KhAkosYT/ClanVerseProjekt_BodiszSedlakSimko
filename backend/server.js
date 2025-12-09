@@ -9,6 +9,7 @@ const { Code400, Code401, Code403, Code404, Code409, Code500 } = require('./util
 const config = require('./utils/config');
 const auth = require('./middleware/auth');
 const { createAccessToken } = require('./utils/jwt');
+const seedGames = require('./seeds/gamesSeed');
 
 const express = require('express');
 const cors = require('cors');
@@ -36,7 +37,8 @@ sequelize.sync().then(() => {
     console.error('Hiba az adatbázis szinkronizálásakor:', err);
 });
 
-
+//! Első futtatáskor kell csak
+seedGames();
 
 
 
@@ -86,9 +88,9 @@ app.post('/api/users/logout', auth, (req, res) => {
 });
 
 app.post('/api/clans', auth, async (req, res, next) => {
-    const { clanName, game, description } = req.body;
+    const { clanName, gameId, description } = req.body;
 
-    if(!clanName || !game){
+    if(!clanName || !gameId){
         return Code400(null, req, res, next, "Hiányzó adatok.");
     }
 
@@ -98,7 +100,7 @@ app.post('/api/clans', auth, async (req, res, next) => {
             return Code409(null, req, res, next, "Már létezik ilyen néven klán.");
         }
 
-        const newClan = await Clans.create({ name: clanName, game, description, createrId: req.user.userId, ownerId: req.user.userId});
+        const newClan = await Clans.create({ name: clanName, gameId, description, createrId: req.user.userId, ownerId: req.user.userId});
         const newClanMember = await ClanMembers.create({ clanId: newClan.id, userId: req.user.userId, role: "leader" });
 
         res.status(201).json({ message: "Klán létrehozva" });
@@ -129,18 +131,21 @@ app.get('/api/clans/:id', auth, async (req, res, next) => {
             return Code404("Nincs ilyen klán", req, res, next);
         }
 
-        const isLeader = await ClanMembers.findOne({ where: { userId: userId, role: "Leader" }});
+        const isLeader = await ClanMembers.findOne({ where: { clanId: clan.id, userId: userId, role: "Leader" }});
+
+        const allMembers = await ClanMembers.findAll({ where: { clanId: clan.id }})
 
         if(isLeader){
-            res.status(200).json({ clan, editable: true });
+            res.status(200).json({ clan, allMembers, editable: true });
         }
 
         const isMember = await ClanMembers.findOne({ where: { clanId: clan.id, userId: userId}});
         if(isMember){
-            res.status(200).json({ clan, canJoin: false });
+            res.status(200).json({ clan, allMembers, canJoin: false });
         }
 
-        res.status(200).json({ clan });
+        //?  Nem emlékszem, hogy kell-e ide a canJoin
+        res.status(200).json({ clan, allMembers, canJoin: true });
     }catch(err){
         console.error(err);
         return Code500(err, req, res, next);
@@ -267,12 +272,24 @@ app.post('/api/clans/:id/leave', auth, async (req, res, next) => {
     }
 });
 
+
 app.get('/api/games', async (req, res, next) => {
-    try{
-        const allGames = await Games.findAll();
-        res.status(200).json({ message: "Sikeresen le lett kérve az összes klán",  allGames})
-    }catch(error){
-        console.error("Hiba történt az összes klán lekérése során");
+    try {
+        const search = req.query.search || '';
+        let games;
+        if (search) {
+            games = await Games.findAll({
+                where: {
+                    gameName: { [Op.like]: `%${search}%` }
+                },
+                attributes: ['id', 'gameName']
+            });
+        } else {
+            games = await Games.findAll({ attributes: ['id', 'gameName'] });
+        }
+        res.json({ games: games.map(g => ({ id: g.id, name: g.gameName })) });
+    } catch (err) {
+        console.error("Hiba történt a játékok lekérdezése során", err);
         return Code500(err, req, res, next);
     }
 });

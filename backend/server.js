@@ -131,21 +131,28 @@ app.get('/api/clans/:id', auth, async (req, res, next) => {
             return Code404("Nincs ilyen klán", req, res, next);
         }
 
-        const isLeader = await ClanMembers.findOne({ where: { clanId: clan.id, userId: userId, role: "Leader" }});
+        const isLeader = await ClanMembers.findOne({ where: { clanId: clan.id, userId: userId, role: "leader" }});
 
-        const allMembers = await ClanMembers.findAll({ where: { clanId: clan.id }})
+        const allClanMembers = await ClanMembers.findAll({ where: { clanId: clan.id }});
+        const allClanMembersName = {}
+        for(const member of allClanMembers){
+            const clanmemberId = member.userId;
+            const clanMemberName = await Users.findByPk(clanmemberId);
+            if(clanMemberName){
+                allClanMembersName[clanmemberId] = clanMemberName.username;
+            }
+        }
 
         if(isLeader){
-            res.status(200).json({ clan, allMembers, editable: true });
+            res.status(200).json({ clan, allClanMembers, allClanMembersName, editable: true });
         }
 
         const isMember = await ClanMembers.findOne({ where: { clanId: clan.id, userId: userId}});
         if(isMember){
-            res.status(200).json({ clan, allMembers, canJoin: false });
+            res.status(200).json({ clan, allClanMembers, allClanMembersName, canJoin: false });
         }
 
-        //?  Nem emlékszem, hogy kell-e ide a canJoin
-        res.status(200).json({ clan, allMembers, canJoin: true });
+        res.status(200).json({ clan, allClanMembers, allClanMembersName, canJoin: true });
     }catch(err){
         console.error(err);
         return Code500(err, req, res, next);

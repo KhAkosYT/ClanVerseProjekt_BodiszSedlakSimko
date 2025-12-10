@@ -228,6 +228,16 @@ app.post('/api/clans/:id/join', auth, async (req, res, next) => {
         const { userId } = req.user;
         const { id } = req.params;
 
+        const clan = await Clans.findByPk(id);
+        if(!clan){
+            return Code404("Nincs ilyen klán", req, res, next);
+        }
+
+        const isMember = await ClanMembers.findOne({ where: { clanId: id, userId: userId }});
+        if(isMember){
+            return Code409("Konfliktus: Már tagja vagy a klánnak", req, res, next);
+        }
+
         const joinToClan = await ClanMembers.create({ clanId: id, userId: userId });
         res.status(200).json({ message: "Sikeresen csatlakoztál a klánhoz" })
     }catch(err){
@@ -245,12 +255,8 @@ app.post('/api/clans/:id/leave', auth, async (req, res, next) => {
         if(!clan){
             return Code404("Nincs ilyen klán", req, res, next);
         }
-
-        const isMember = await ClanMembers.findOne({ where: { clanId: id, userId: userId }});
-        if(isMember){
-            return Code409("Konfliktus: Már tagja vagy a klánnak", req, res, next);
-        }
-
+        
+        //! Ezt át kell írni, hogy a clanMembers táblából ellenőrizze, hogy leader-e a user
         let newOwnerId = null;
         if (clan.createrId === userId) {
             const oldestMember = await ClanMembers.findOne({

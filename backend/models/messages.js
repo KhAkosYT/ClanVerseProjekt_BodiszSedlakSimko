@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../database/sequelize');
 
-const clanMessages = sequelize.define('clanMessages', {
+const ClanMessages = sequelize.define('clanMessages', {
     id: {
         type: DataTypes.INTEGER(11),
         autoIncrement: true,
@@ -37,3 +37,5 @@ const clanMessages = sequelize.define('clanMessages', {
     charset: 'utf8mb4',
     collate: 'utf8mb4_hungarian_ci'
 });
+
+module.exports = ClanMessages;

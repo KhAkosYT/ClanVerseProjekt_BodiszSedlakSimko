@@ -4,7 +4,8 @@ const config = require('../utils/config');
 function createAccessToken(user){
     return jwt.sign(
         { userId: user.id,
-          username: user.username
+          username: user.username,
+          isAdmin: user.isAdmin
          },
         config.secretKey,
         { expiresIn: '1h' }

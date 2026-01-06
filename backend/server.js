@@ -90,6 +90,8 @@ app.post('/api/users/logout', auth, (req, res) => {
 app.post('/api/clans', auth, async (req, res, next) => {
     const { clanName, gameId, description } = req.body;
 
+    const { userId } = req.user;
+
     if(!clanName || !gameId){
         return Code400(null, req, res, next, "Hiányzó adatok.");
     }
@@ -100,8 +102,8 @@ app.post('/api/clans', auth, async (req, res, next) => {
             return Code409(null, req, res, next, "Már létezik ilyen néven klán.");
         }
 
-        const newClan = await Clans.create({ name: clanName, gameId, description, createrId: req.user.userId, ownerId: req.user.userId});
-        const newClanMember = await ClanMembers.create({ clanId: newClan.id, userId: req.user.userId, role: "leader" });
+        const newClan = await Clans.create({ name: clanName, gameId, description, createrId: userId, ownerId: userId});
+        const newClanMember = await ClanMembers.create({ clanId: newClan.id, userId: userId, role: "leader" });
 
         res.status(201).json({ message: "Klán létrehozva" });
     }
@@ -135,38 +137,49 @@ app.get('/api/clans', async (req, res, next) => {
 app.get('/api/clans/:id', auth, async (req, res, next) => {
     const { userId } = req.user;
 
-
-    try{
+    try {
         const { id } = req.params;
         const clan = await Clans.findByPk(id);
 
-        if(!clan){
+        if (!clan) {
             return Code404("Nincs ilyen klán", req, res, next);
         }
 
-        const isLeader = await ClanMembers.findOne({ where: { clanId: clan.id, userId: userId, role: "leader" }});
-
-        const allClanMembers = await ClanMembers.findAll({ where: { clanId: clan.id }});
-        const allClanMembersName = {}
-        for(const member of allClanMembers){
+        const clanMembersRecords = await ClanMembers.findAll({ where: { clanId: clan.id } });
+        const allClanMembers = {};
+        for (const member of clanMembersRecords) {
             const clanmemberId = member.userId;
             const clanMemberName = await Users.findByPk(clanmemberId);
-            if(clanMemberName){
-                allClanMembersName[clanmemberId] = clanMemberName.username;
+            if (clanMemberName) {
+                allClanMembers[clanmemberId] = {
+                    name: clanMemberName.username,
+                    role: member.role
+                };
             }
         }
 
-        if(isLeader){
-            res.status(200).json({ clan, allClanMembers, allClanMembersName, editable: true });
+
+        const clanGameName = await Games.findByPk(clan.gameId);
+
+        const clanData = {};
+        clanData.id = clan.id;
+        clanData.name = clan.name;
+        clanData.gameName = clanGameName.gameName;
+        clanData.description = clan.description;
+
+        const isLeader = await ClanMembers.findOne({ where: { clanId: clan.id, userId: userId, role: "leader" } });
+        if (isLeader) {
+            res.status(200).json({ clanData, allClanMembers, editable: true });
         }
 
-        const isMember = await ClanMembers.findOne({ where: { clanId: clan.id, userId: userId}});
-        if(isMember){
-            res.status(200).json({ clan, allClanMembers, allClanMembersName, canJoin: false });
+        const isMember = await ClanMembers.findOne({ where: { clanId: clan.id, userId: userId } });
+        if (isMember) {
+            res.status(200).json({ clanData, allClanMembers, canJoin: false });
         }
 
-        res.status(200).json({ clan, allClanMembers, allClanMembersName, canJoin: true });
-    }catch(err){
+
+        res.status(200).json({ clanData, allClanMembers, canJoin: true });
+    } catch (err) {
         console.error(err);
         return Code500(err, req, res, next);
     }

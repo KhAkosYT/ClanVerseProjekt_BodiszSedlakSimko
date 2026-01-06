@@ -1,15 +1,20 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core'; 
+import { Component, OnInit } from '@angular/core';
 // import { RouterLink } from "@angular/router";
+
+interface Member {
+  name: string;
+  role: string;
+}
 
 @Component({
   selector: 'app-clans',
-  imports: [],  
+  imports: [],
   templateUrl: './clans.html',
   styleUrl: './clans.css'
 })
 
-export class Clans implements OnInit {  
+export class Clans implements OnInit {
   private token = localStorage.getItem('token');
   error: string | null = null;
 
@@ -40,7 +45,7 @@ export class Clans implements OnInit {
               cardDiv.innerHTML = `
                 <div class="card-body">
                   <h5 class="card-title">${clan.name}</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">${clan.game}</h6>
+                  <h6 class="card-subtitle mb-2 text-body-secondary">${clan.game.gameName}</h6>
                   <a class="card-link" id="openClan">Részletek</a>
                 </div>
                 `;
@@ -75,8 +80,8 @@ export class Clans implements OnInit {
       this.http.get(`http://localhost:3000/api/clans/${clanId}`, { headers }).subscribe({
         next: (data) => {
           const innerClanData = data as any; // Objektum, ami listát tartalmaz
-          const clanData = innerClanData.clan;
-          const allMembers = innerClanData.allMembers;
+          const clan = innerClanData.clanData;
+          const allMembers = innerClanData.allClanMembers;
 
           const clanDetailsContainer = document.querySelector('.clan-details-container');
           if (clanDetailsContainer) {
@@ -84,9 +89,9 @@ export class Clans implements OnInit {
             
             clanDetailsContainer.innerHTML = `
                   <div class="card-body">
-                    <h5 class="card-title">${clanData.name}</h5>
-                    <h6 class="card-subtitle mb-2 text-body-secondary">${clanData.game}</h6>
-                    <p class="card-text">${clanData.description}</p>
+                    <h5 class="card-title">${clan.name}</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">${clan.gameName}</h6>
+                    <p class="card-text">${clan.description}</p>
                     <div class="members">
                       <!-- ide jönnek a tagok -->
                     </div>
@@ -96,32 +101,46 @@ export class Clans implements OnInit {
                   </div>
             `;
             const membersDiv = document.querySelector('.members');
-            if(membersDiv){
-              for(const member of allMembers){
+            if (membersDiv) {
+              // Az allMembers objektum értékeit tömbbe alakítjuk, hogy iterálható legyen
+              const membersArray = Object.values(allMembers) as Member[];
+              for (const member of membersArray) {
                 const p = document.createElement('p');
-                p.innerHTML = `${member}`;
+                p.innerHTML = `Név: ${member.name} Szerep: ${member.role}`;
                 membersDiv.appendChild(p);
               }
             }
 
             const buttonDiv = document.querySelector('.buttons');
             if(buttonDiv) {
+              buttonDiv.innerHTML = ''; 
               if(innerClanData.editable){
-                buttonDiv.innerHTML = `
-                  <button (click)="updateClan(id)">Klán módosítása</button>
-                  <button (click)="deleteClan(id)">Klán törlése</button>
-                  <button (click)="leaveClan(id)">Kilépés a klánból</button>
-                `;
+                const updateBtn = document.createElement('button');
+                updateBtn.textContent = 'Klán módosítása';
+                updateBtn.addEventListener('click', () => this.updateClan(clanId));
+                buttonDiv.appendChild(updateBtn);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Klán törlése';
+                deleteBtn.addEventListener('click', () => this.deleteClan(clanId));
+                buttonDiv.appendChild(deleteBtn);
+
+                const leaveBtn = document.createElement('button');
+                leaveBtn.textContent = 'Kilépés a klánból';
+                leaveBtn.addEventListener('click', () => this.leaveClan(clanId));
+                buttonDiv.appendChild(leaveBtn);
               }
               if(innerClanData.canJoin === false){
-                buttonDiv.innerHTML = `
-                  <button (click)="leaveClan(id)">Kilépés a klánból</button>
-                `;
+                const leaveBtn = document.createElement('button');
+                leaveBtn.textContent = 'Kilépés a klánból';
+                leaveBtn.addEventListener('click', () => this.leaveClan(clanId));
+                buttonDiv.appendChild(leaveBtn);
               }
               if(innerClanData.canJoin === true){
-                buttonDiv.innerHTML = `
-                  <button (click)="joinClan(id)">Belépés a klánba</button>
-                `;
+                const joinBtn = document.createElement('button');
+                joinBtn.textContent = 'Belépés a klánba';
+                joinBtn.addEventListener('click', () => this.onJoin(clanId));
+                buttonDiv.appendChild(joinBtn);
               }
             }
             
@@ -136,6 +155,47 @@ export class Clans implements OnInit {
       });
     }
   }
+
+  
+
+
+
+
+  updateClan(clanId: string): void {
+
+    console.log('Klán adatainak frissítése:', clanId);
+  }
+
+  deleteClan(clanId: string): void {
+
+    console.log('Klán törlése:', clanId);
+  }
+
+  leaveClan(clanId: string): void {
+
+    console.log('Kilépés a klánból:', clanId);
+  }
+
+  onJoin(clanid: string): void{
+    if(this.token) {
+      const headers = new HttpHeaders ({
+        'Authorization': `Bearer ${this.token}`
+      });
+
+
+      this.http.post(`http://localhost:3000/api/clans/${clanid}/join`, {}, { headers }).subscribe({
+        next: (response: any) => {
+          console.log(response.message);
+          window.location.reload(); 
+        },
+        error: (error) => {console.error("Hiba a klánba lépéskor.")}
+      })
+    }
+  }
+
+
+
+
 
   
 

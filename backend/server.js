@@ -87,6 +87,47 @@ app.post('/api/users/logout', auth, (req, res) => {
     res.status(200).json({ message: "Sikeres kijelentkezés." });
 });
 
+app.get('/api/users/profile', auth, async(req, res, next) => {
+    const { userId } = req.user;
+
+    const userData = await Users.findByPk(userId);
+    if(!userData){
+        return Code404("Nem található felhasználó", req, res, next);
+    }
+
+    res.status(200).json({ userName: userData.username, email: userData.email  });
+});
+
+app.put('/api/users/profile', auth, async (req, res, next) => {
+    const { userId } = req.user;
+
+    const { newUserName, newEmail, currPass, newPass } = req.body;
+
+    const userData = await Users.findByPk(userId);
+    if(!userData){
+        return Code404("Nem található felhasználó", req, res, next);
+    }
+
+    const isPasswordValid = await bcrypt.compare(currPass, userData.password);
+    if(!isPasswordValid){
+        return Code401(null, req, res, next, "Hibás felhasználónév vagy jelszó.");
+    }
+
+    if(newUserName && newUserName != userData.username){
+        userData.username = newUserName;
+    }
+    if(newEmail && newEmail != userData.email){
+        userData.email = newEmail;
+    }
+    if(isPasswordValid && newPass && newPass != currPass){
+        userData.password = await bcrypt.hash(newPass, config.hashIterations);
+    }
+
+    await userData.save();
+    res.status(200).json({ message: "Profil frissítve" });
+
+});
+
 app.post('/api/clans', auth, async (req, res, next) => {
     const { clanName, gameId, description } = req.body;
 

@@ -1,3 +1,4 @@
+//adatbázis impor-ok
 const sequelize = require('./database/sequelize');
 const Users = require('./models/users');
 const Clans = require('./models/clans');
@@ -5,12 +6,20 @@ const ClanMembers = require('./models/clanMembers');
 const Games = require('./models/games');
 const ClanMessages = require('./models/messages');
 
+//utils import-ok
 const { Code400, Code401, Code403, Code404, Code409, Code500 } = require('./utils/statusCode');
 const config = require('./utils/config');
-const auth = require('./middleware/auth');
 const { createAccessToken } = require('./utils/jwt');
+
+
+//seed import(-ok) //? Még nem tudom, hogy egy fájlban lesz-e minden seed, vagy minden táblára lesz külön-külön
 const seedGames = require('./seeds/gamesSeed');
 
+//middleware import-ok
+const auth = require('./middleware/auth');
+const upload = require('./middleware/uploadPfp');
+
+//App import-ok
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
@@ -95,10 +104,10 @@ app.get('/api/users/profile', auth, async(req, res, next) => {
         return Code404("Nem található felhasználó", req, res, next);
     }
 
-    res.status(200).json({ userName: userData.username, email: userData.email  });
+    res.status(200).json({ userName: userData.username, email: userData.email, profilePicture: userData.profilePicture });
 });
 
-app.put('/api/users/profile', auth, async (req, res, next) => {
+app.put('/api/users/profile', auth, upload.single('profilePicture'), async (req, res, next) => {
     const { userId } = req.user;
 
     const { newUserName, newEmail, currPass, newPass } = req.body;
@@ -121,6 +130,10 @@ app.put('/api/users/profile', auth, async (req, res, next) => {
     }
     if(isPasswordValid && newPass && newPass != currPass){
         userData.password = await bcrypt.hash(newPass, config.hashIterations);
+    }
+
+    if(req.file){
+        userData.profilePicture = req.file.filename;
     }
 
     await userData.save();

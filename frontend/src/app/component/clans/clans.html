@@ -1,6 +1,32 @@
 <div class="clans-container">
-  
+
 </div>
 <div class="clan-details-container">
 
+</div>
+
+<div *ngIf="showEditModal" class="modal-overlay">
+  <div class="modal-content">
+    <h2>Klán módosítása</h2>
+    <form (ngSubmit)="onEditClanSubmit()" #editClanForm="ngForm">
+      <div>
+        <label for="editClanName">Klán neve</label>
+        <input type="text" id="editClanName" name="editClanName" [(ngModel)]="editClanName" required>
+      </div>
+      <div>
+        <label for="editGame">Játék</label>
+        <input type="text" id="editGame" name="editGame" [(ngModel)]="editGameName" (input)="onEditGameInput($event)" (change)="onEditGameChange($event)" required autocomplete="off">
+        <input type="hidden" id="editGameId" name="editGameId" [(ngModel)]="editGameId">
+        <ul *ngIf="editGameSuggestions.length > 0" id="edit-game-suggestions" class="game-suggestions">
+          <li *ngFor="let game of editGameSuggestions" (mousedown)="selectEditGame(game)">{{ game.name }}</li>
+        </ul>
+      </div>
+      <div>
+        <label for="editDescription">Leírás</label>
+        <textarea id="editDescription" name="editDescription" [(ngModel)]="editDescription" required></textarea>
+      </div>
+      <button type="submit" [disabled]="!editClanForm.form.valid">Mentés</button>
+      <button type="button" (click)="closeEditModal()">Mégse</button>
+    </form>
+  </div>
 </div>

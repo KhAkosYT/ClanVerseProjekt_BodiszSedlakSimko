@@ -1,22 +1,23 @@
-<p>createclan works!</p>
 <p routerLink="/fooldal">fooldal</p>
 <form (ngSubmit)="onSubmit()" #createclanForm="ngForm" class="form-container">
         <div>
-            <label for="clanName">clanName</label>
+            <label for="clanName">Klán neve</label>
             <input type="text" name="clanName" id="clanName" [(ngModel)]="clanname" required >
         </div>
         <div>
-            <label for="game">Game</label>
-            <input type="text" name="game" id="game"  required>
-            <input type="hidden" id="gameId" name="gameId">
+            <label for="game">Játék</label>
+            <input type="text" name="game" id="game" [(ngModel)]="gameName" (input)="onGameInput($event)" (focus)="onGameFocus()" required autocomplete="off">
+            <input type="hidden" id="gameId" name="gameId" [(ngModel)]="gameId">
+            <ul class="game-suggestions">
+                <li *ngFor="let game of gameSuggestions" (mousedown)="selectGame(game)">{{ game.name }}</li>
+            </ul>
         </div>
         <div>
-            <label for="description">description</label>
+            <label for="description">Leírás</label>
             <textarea name="description" id="description" [(ngModel)]="description" required></textarea>
         </div>
-        <input type="submit" value="Create Clan" id="createClanBtn" [disabled]="!createclanForm.form.valid" >
+        <input type="submit" value="Klán létrehozása" id="createClanBtn" [disabled]="!createclanForm.form.valid" >
     </form>
-    <input type="submit" value="logout" id="logout" name="logout">
 
     <div *ngIf="showModal" class="modal-overlay">
         <div class="modal-content">

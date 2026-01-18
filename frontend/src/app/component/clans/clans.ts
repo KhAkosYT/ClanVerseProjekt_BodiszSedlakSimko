@@ -1,5 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 // import { RouterLink } from "@angular/router";
 
 interface Member {
@@ -9,7 +11,7 @@ interface Member {
 
 @Component({
   selector: 'app-clans',
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './clans.html',
   styleUrl: './clans.css'
 })
@@ -17,13 +19,20 @@ interface Member {
 export class Clans implements OnInit {
   private token = localStorage.getItem('token');
   error: string | null = null;
+  games: any[] = [];
+  editGameId: number | null = null;
+  showEditModal: boolean = false;
+  editClanName: string = '';
+  editDescription: string = '';
+  editGameName: string = '';
+  editGameSuggestions: any[] = [];
+  editingClanId: string | null = null;
 
   constructor(private http: HttpClient) {
     console.log('Clans component constructor called');
   }
 
   ngOnInit(): void {
-    console.log('ngOnInit called in Clans component');
     if (this.token) {
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${this.token}`  
@@ -33,7 +42,7 @@ export class Clans implements OnInit {
         next: (datas) => {
           const innerClansData = datas as any; // Objektum, ami listát tartalmaz
           const clansData = innerClansData.clans;
-          console.log('Clans data received:', datas);
+          //console.log('Clans data received:', datas);
           
 
           const clansContainer = document.querySelector('.clans-container');
@@ -117,7 +126,7 @@ export class Clans implements OnInit {
               if(innerClanData.editable){
                 const updateBtn = document.createElement('button');
                 updateBtn.textContent = 'Klán módosítása';
-                updateBtn.addEventListener('click', () => this.updateClan(clanId));
+                updateBtn.addEventListener('click', () => this.openEditModal(clan));
                 buttonDiv.appendChild(updateBtn);
 
                 const deleteBtn = document.createElement('button');
@@ -156,22 +165,62 @@ export class Clans implements OnInit {
     }
   }
 
-  
+  openEditModal(clan: any) {
+    console.log('Szerkesztendő klán adatai:', clan);
+    this.editClanName = clan.name;
+    this.editDescription = clan.description;
+    this.editGameId = clan.gameId;
+    this.editGameName = clan.gameName;
+    this.editingClanId = clan.id;
+    this.showEditModal = true;
+    this.fetchGames();
+  }
 
-
-
-
-  updateClan(clanId: string): void {
-
-    console.log('Klán adatainak frissítése:', clanId);
+  fetchGames() {
+    this.http.get('http://localhost:3000/api/games').subscribe({
+      next: (data: any) => {
+        this.games = data.games || [];
+        this.editGameSuggestions = this.games;
+      },
+      error: (err) => {
+        console.error('Hiba a játékok lekérésekor:', err);
+      }
+    });
   }
 
   deleteClan(clanId: string): void {
+    if(this.token) {
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${this.token}`
+      });
+
+      this.http.delete(`http://localhost:3000/api/clans/${clanId}`, { headers }).subscribe({
+        next: (response: any) => {
+          console.log(response.message);
+          window.location.reload();
+
+        },
+        error: (error) => {console.error("Hiba a klán törlésekor.")}
+      });
+    }
 
     console.log('Klán törlése:', clanId);
   }
 
   leaveClan(clanId: string): void {
+    if(this.token) {
+      const headers = new HttpHeaders ({
+        'Authorization': `Bearer ${this.token}`
+      });
+
+      this.http.post(`http://localhost:3000/api/clans/${clanId}/leave`, {}, { headers }).subscribe({
+        next: (response: any) =>  {
+          console.log(response.message);
+          window.location.reload();
+        },
+        error: (error) => {console.error("Hiba a klán kilépésekor.")}
+      });
+    }
 
     console.log('Kilépés a klánból:', clanId);
   }
@@ -189,10 +238,94 @@ export class Clans implements OnInit {
           window.location.reload(); 
         },
         error: (error) => {console.error("Hiba a klánba lépéskor.")}
-      })
+      });
     }
   }
 
+  onEditGameInput(event: any) {
+    const value = this.editGameName.trim();
+    if (!value) {
+      this.editGameSuggestions = this.games;
+      this.editGameId = null;
+      return;
+    }
+    this.http.get(`http://localhost:3000/api/games?search=${encodeURIComponent(value)}`).subscribe({
+      next: (data: any) => {
+        this.editGameSuggestions = Array.isArray(data.games) ? data.games : [];
+      },
+      error: (err) => {
+        this.editGameSuggestions = [];
+        console.error('Hiba a játékok szűrésekor:', err);
+      }
+    });
+  }
+
+  onEditGameChange(event: any) {
+    const value = event.target.value.trim();
+    if (!value) {
+      this.editGameSuggestions = [];
+      this.editGameId = null;
+      return;
+    }
+    this.http.get(`http://localhost:3000/api/games?search=${encodeURIComponent(value)}`).subscribe({
+      next: (data: any) => {
+        this.editGameSuggestions = Array.isArray(data.games) ? data.games : [];
+      },
+      error: (err) => {
+        this.editGameSuggestions = [];
+        console.error('Hiba a játékok szűrésekor (change event):', err);
+      }
+    });
+  }
+
+  selectEditGame(game: any) {
+    this.editGameName = game.name;
+    this.editGameId = game.id;
+    this.editGameSuggestions = [];
+  }
+
+  closeEditModal() {
+    this.showEditModal = false;
+    this.editClanName = '';
+    this.editDescription = '';
+    this.editGameName = '';
+    this.editGameId = null;
+    this.editGameSuggestions = [];
+  }
+
+  onEditClanSubmit() {
+    if (!this.editGameId && this.editGameName) {
+      const matchedGame = this.games.find(game => game.name.toLowerCase() === this.editGameName.toLowerCase());
+      if (matchedGame) {
+        this.editGameId = matchedGame.id;
+      }
+    }
+
+    if (!this.editClanName || !this.editGameId || !this.editDescription) {
+      console.error('Hiányzó adatok a mentéshez:', { name: this.editClanName, gameId: this.editGameId, description: this.editDescription });
+      return;
+    }
+    if (this.token) {
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${this.token}`
+      });
+      const updateData = {
+        newClanName: this.editClanName,
+        newClanGame: this.editGameId,
+        newClanDescription: this.editDescription
+      };
+
+      this.http.put(`http://localhost:3000/api/clans/${this.editingClanId}`, updateData, { headers }).subscribe({
+        next: (response: any) => {
+          this.closeEditModal();
+          window.location.reload();
+        },
+        error: (error) => {
+          console.error('Hiba a klán módosításánál:', error);
+        }
+      });
+    }
+  }
 
 
 

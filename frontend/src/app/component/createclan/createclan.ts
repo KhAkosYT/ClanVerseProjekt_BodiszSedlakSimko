@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from '@angular/common';
@@ -11,72 +11,61 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrl: './createclan.css'
 })
 
-export class Createclan implements AfterViewInit {
+export class Createclan implements OnInit {
    clanname: string = "";
-   gameId: number = -1;
+   gameId: number | null = null;
+   gameName: string = "";
    description: string = "";
    showModal: boolean = false;
+   games: any[] = [];
+   gameSuggestions: any[] = [];
 
   constructor(private http: HttpClient) {}
 
   private token = localStorage.getItem('token');
 
-  ngAfterViewInit(): void {
-    const gameInput = document.getElementById('game') as HTMLInputElement;
-    const suggestions = document.createElement('ul');
-    suggestions.id = 'game-suggestions';
-    gameInput.parentNode!.insertBefore(suggestions, gameInput.nextSibling);
-    let currentGames: any[] = [];
+  ngOnInit(): void {
+    this.fetchGames();
+  }
 
-    gameInput.addEventListener('input', async (e) => {
-      const game = (e.target as HTMLInputElement).value.trim();
-      if (!game) {
-        suggestions.style.display = 'none';
-        suggestions.innerHTML = '';
-        (document.getElementById('gameId') as HTMLInputElement).value = '';
-        currentGames = [];
-        return;
-      }
-      try {
-        const response = await fetch(`http://localhost:3000/api/games?search=${encodeURIComponent(game)}`);
-        const data = await response.json();
-        const games = data.games || [];
-        currentGames = games;
-        suggestions.innerHTML = '';
-        if (games.length > 0) {
-          games.forEach((g: any) => {
-            const li = document.createElement('li');
-            li.textContent = g.name;
-            li.style.cursor = 'pointer';
-            li.style.padding = '4px';
-            li.addEventListener('mousedown', () => {
-              gameInput.value = g.name;
-              (document.getElementById('gameId') as HTMLInputElement).value = g.id;
-              suggestions.style.display = 'none';
-              suggestions.innerHTML = '';
-              currentGames = [];
-            });
-            suggestions.appendChild(li);
-          });
-          suggestions.style.display = 'block';
-        } else {
-          suggestions.style.display = 'none';
-        }
-      } catch (err) {
-        console.error('Hiba történt a játékok lekérdezése során:', err);
+  fetchGames() {
+    this.http.get('http://localhost:3000/api/games').subscribe({
+      next: (data: any) => {
+        this.games = data.games || [];
+        this.gameSuggestions = [...this.games];
+      },
+      error: (err) => {
+        console.error('Hiba a játékok lekérésekor:', err);
       }
     });
+  }
 
-    gameInput.addEventListener('keydown', (e) => {
-      if ((e.key === 'Enter' || e.key === 'Tab') && currentGames.length === 1) {
-        e.preventDefault();
-        gameInput.value = currentGames[0].name;
-        (document.getElementById('gameId') as HTMLInputElement).value = currentGames[0].id;
-        suggestions.style.display = 'none';
-        suggestions.innerHTML = '';
-        currentGames = [];
+  onGameInput(event: any) {
+    const value = this.gameName.trim();
+    if (!value) {
+      this.gameSuggestions = this.games;
+      this.gameId = null;
+      return;
+    }
+    this.http.get(`http://localhost:3000/api/games?search=${encodeURIComponent(value)}`).subscribe({
+      next: (data: any) => {
+        this.gameSuggestions = Array.isArray(data.games) ? data.games : [];
+      },
+      error: (err) => {
+        this.gameSuggestions = [];
+        console.error('Hiba a játékok szűrésekor:', err);
       }
     });
+  }
+
+  selectGame(game: any) {
+    this.gameName = game.name;
+    this.gameId = game.id;
+    this.gameSuggestions = [];
+  }
+
+  onGameFocus() {
+    this.gameSuggestions = this.games;
   }
 
   goToLogin() {
@@ -88,13 +77,11 @@ export class Createclan implements AfterViewInit {
       this.showModal = true;
       return;
     }
-    const gameIdValue = parseInt((document.getElementById('gameId') as HTMLInputElement).value, 10);
-    const createclanData = {clanName : this.clanname, gameId: gameIdValue, description: this.description}
+    const createclanData = {clanName : this.clanname, gameId: this.gameId, description: this.description}
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
 
     this.http.post('http://localhost:3000/api/clans', createclanData, { headers }).subscribe({
       next: (response: any) => {
-        console.log('Sikeres klán létrehozás:', response);
         window.location.href = '/clans';
       },
       error: (error) => {

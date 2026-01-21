@@ -1,0 +1,26 @@
+
+<div class="chat-container">
+    <div class="chat-header">
+        <h2>Klán üzenetek (ID: {{clanId}})</h2>
+    </div>
+
+    <div class="message-list" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+        <div *ngFor="let msg of messages" class="message-item">
+            <div class="message-meta">
+                <span class="sender">{{ msg.sender }}</span>
+                <span class="time">{{ msg.time | date:'yyyy.MM.dd. HH:mm' }}</span>
+            </div>
+            <div class="message-text">{{ msg.message }}</div>
+        </div>
+    </div>
+
+    <div class="input-area">
+        <input 
+        [(ngModel)]="newMessage" 
+        (keyup.enter)="sendMessage()" 
+        placeholder="Írj egy üzenetet..." 
+        type="text" 
+        />
+        <button (click)="sendMessage()" [disabled]="!newMessage.trim()">Küldés</button>
+    </div>
+</div>

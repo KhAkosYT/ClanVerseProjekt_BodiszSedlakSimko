@@ -1,6 +1,24 @@
 <div class="profile-container">
-    <h2>Profil szerkesztése</h2>
-    <form id="profile-form">
+    <h2 *ngIf="isEditing">Profil szerkesztése</h2>
+
+    <div *ngIf="!isEditing" class="profile-view" style="text-align: center; margin-bottom: 20px;">
+        <div class="profile-image-container" style="margin-bottom: 15px;">
+            <img [src]="profilePictureUrl" alt="Profilkép" style="max-width: 200px; max-height: 200px; border-radius: 50%; object-fit: cover;">
+        </div>
+        <h3>{{ username }}</h3>
+        <p>{{ email }}</p>
+        <button class="btn btn-primary" (click)="toggleEditMode()">Profil szerkesztése</button>
+    </div>
+
+    <form *ngIf="isEditing" id="profile-form">
+        <div class="form-group" style="text-align: center;">
+             <div class="profile-image-container" style="margin-bottom: 10px;">
+                <img [src]="profilePictureUrl" alt="Profilkép" style="max-width: 150px; max-height: 150px; border-radius: 50%; object-fit: cover;">
+            </div>
+            <label for="profilePicture">Profilkép módosítása:</label>
+            <input type="file" id="profilePicture" (change)="onFileSelected($event)">
+        </div>
+
         <div class="form-group">
             <label for="username">Felhasználónév:</label>
             <input type="text" id="username" name="username" [(ngModel)]="username" required>
@@ -10,7 +28,7 @@
             <input type="email" id="email" name="email"  [(ngModel)]="email" required>
         </div>
         <div class="form-group">
-            <label for="current_password">Jelenlegi jelszó:</label>
+            <label for="current_password">Jelenlegi jelszó (kötelező a mentéshez):</label>
             <input type="password" id="current_password" name="current_password"  [(ngModel)]="current_password" required>
         </div>
         <div class="form-group">
@@ -22,5 +40,6 @@
             <input type="password" id="confirm_new_password" name="confirm_new_password" [(ngModel)]="confirm_new_password">
         </div>
         <button type="button" class="btn btn-primary" id="update_user_button" (click)="updateProfile()">Mentés</button>
+        <button type="button" class="btn btn-secondary" (click)="toggleEditMode()" style="margin-left: 10px;">Mégse</button>
     </form>
 </div>

@@ -42,4 +42,17 @@ export const routes: Routes = [
       .then(mod => mod.Createclan);
     }
    },
+   { path: 'message/:clanId',
+    loadComponent() {
+      return import('./component/message/message')
+      .then(mod => mod.Messages);
+    }
+   },
+   { path: 'profile',
+    loadComponent() {
+      return import('./component/profile/profile')
+      .then(mod => mod.Profile);
+    }
+   },
+   
 ];

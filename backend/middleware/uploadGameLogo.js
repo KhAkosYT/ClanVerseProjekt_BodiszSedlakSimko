@@ -1,0 +1,1 @@
+//Jatekok logojanak a feltolteset kezelo middleware

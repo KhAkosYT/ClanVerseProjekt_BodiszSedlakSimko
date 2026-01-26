@@ -24,6 +24,7 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
+const { path } = require('path');
 
 const app = express();
 app.use(express.json());
@@ -39,6 +40,7 @@ app.use(
 
 //! törölni kell ezt
 app.use(express.static('public'));
+app.use('/uploads', express.static('uploads'));
 
 sequelize.sync().then(() => {
     console.log('Az adatbázis szinkronizálva.');
@@ -65,7 +67,7 @@ app.post('/api/users/register', async (req, res, next) => {
         const hashedPassword = await bcrypt.hash(password, config.hashIterations); 
 
         const newUser = await Users.create({ username, email, password: hashedPassword });
-        res.status(201).json({ message: "Sikeres regisztráció.", userId: newUser.id });
+        res.status(201).json({ message: "Sikeres regisztráció."});
     } catch (error) {
         return Code500(error, req, res, next);
     }
@@ -86,7 +88,7 @@ app.post('/api/users/login', async (req, res, next) => {
             return Code401(null, req, res, next, "Hibás felhasználónév vagy jelszó.");
         }
         const token = createAccessToken(user);
-        res.status(200).json({ message: "Sikeres bejelentkezés.", userId: user.id, token });
+        res.status(200).json({ message: "Sikeres bejelentkezés.", token });
     } catch (error) {
         return Code500(error, req, res, next);
     }
@@ -101,25 +103,25 @@ app.get('/api/users/profile', auth, async(req, res, next) => {
 
     const userData = await Users.findByPk(userId);
     if(!userData){
-        return Code404("Nem található felhasználó", req, res, next);
+        return Code404(null, req, res, next,"Nem található felhasználó");
     }
 
     res.status(200).json({ userName: userData.username, email: userData.email, profilePicture: userData.profilePicture });
 });
 
-app.put('/api/users/profile', auth, upload.single('profilePicture'), async (req, res, next) => {
+app.put('/api/users/profile', auth, upload, async (req, res, next) => {
     const { userId } = req.user;
 
     const { newUserName, newEmail, currPass, newPass } = req.body;
 
     const userData = await Users.findByPk(userId);
     if(!userData){
-        return Code404("Nem található felhasználó", req, res, next);
+        return Code404(null, req, res, next,"Nem található felhasználó");
     }
 
     const isPasswordValid = await bcrypt.compare(currPass, userData.password);
     if(!isPasswordValid){
-        return Code401(null, req, res, next, "Hibás felhasználónév vagy jelszó.");
+        return Code401(null, req, res, next, "Hibás jelszó.");
     }
 
     if(newUserName && newUserName != userData.username){
@@ -133,7 +135,7 @@ app.put('/api/users/profile', auth, upload.single('profilePicture'), async (req,
     }
 
     if(req.file){
-        userData.profilePicture = req.file.filename;
+        userData.profilePicture = 'profilePictures/' + req.file.filename;
     }
 
     await userData.save();
@@ -162,14 +164,14 @@ app.post('/api/clans', auth, async (req, res, next) => {
         res.status(201).json({ message: "Klán létrehozva" });
     }
     catch(err){
-        return Code500(err, req, res, next);
+        return Code500(err, req, res, next, "Hiba történt a klán létrehozása során");
     }
 });
 
 app.get('/api/clans', async (req, res, next) => {
-    try{
+    try {
         const gameFilter = req.query.game;
-        let clans;
+        let clansData;
 
         if (gameFilter) {
             const numericId = Number(gameFilter);
@@ -177,16 +179,30 @@ app.get('/api/clans', async (req, res, next) => {
                 return Code400(null, req, res, next, "A 'game' query paramnek numerikus game id-nek kell lennie.");
             }
 
-            clans = await Clans.findAll({ where: { gameId: numericId }, include: [{ model: Games, as: 'game', attributes: ['id', 'gameName'] }] });
+            clansData = await Clans.findAll({ 
+                where: { gameId: numericId }, 
+                include: [{ model: Games, as: 'game', attributes: ['id', 'gameName'] }] 
+            });
         } else {
-            clans = await Clans.findAll({ include: [{ model: Games, as: 'game', attributes: ['id', 'gameName'] }] });
+            clansData = await Clans.findAll({ 
+                include: [{ model: Games, as: 'game', attributes: ['id', 'gameName'] }] 
+            });
         }
 
-        res.status(200).json({ clans });
-    }catch(err){
+        const clans = clansData.map(clan => ({
+            id: clan.id,
+            name: clan.name,
+            gameId: clan.gameId,
+            gameName: clan.game ? clan.game.gameName : null,
+            description: clan.description
+        }));
+
+        res.status(200).json(clans);
+    } catch (err) {
         return Code500(err, req, res, next);
     }
 });
+
 
 app.get('/api/clans/:id', auth, async (req, res, next) => {
     const { userId } = req.user;
@@ -215,24 +231,29 @@ app.get('/api/clans/:id', auth, async (req, res, next) => {
 
         const clanGameName = await Games.findByPk(clan.gameId);
 
-        const clanData = {};
-        clanData.id = clan.id;
-        clanData.name = clan.name;
-        clanData.gameName = clanGameName.gameName;
-        clanData.description = clan.description;
 
         const isLeader = await ClanMembers.findOne({ where: { clanId: clan.id, userId: userId, role: "leader" } });
-        if (isLeader) {
-            res.status(200).json({ clanData, allClanMembers, editable: true });
-        }
-
         const isMember = await ClanMembers.findOne({ where: { clanId: clan.id, userId: userId } });
-        if (isMember) {
-            res.status(200).json({ clanData, allClanMembers, canJoin: false });
+        
+        const clanData = {
+            id: clan.id,
+            name: clan.name,
+            gameName: clanGameName ? clanGameName.gameName : null,
+            description: clan.description,
+            allMembers: Object.values(allClanMembers),
+        };
+
+        if (isLeader) {
+            res.status(200).json({ clanData, editable: true });
         }
 
+        if (isMember) {
+            res.status(200).json({ clanData, canJoin: false });
+        }
 
-        res.status(200).json({ clanData, allClanMembers, canJoin: true });
+          
+
+        res.status(200).json({ clanData, canJoin: true });
     } catch (err) {
         console.error(err);
         return Code500(err, req, res, next);
@@ -261,7 +282,7 @@ app.delete('/api/clans/:id', auth, async (req, res, next) => {
     }
     catch(err){
         console.error("Hiba a klántörlése során:" + err);
-        return Code500(err, req, res, next);
+        return Code500(err, req, res, next, "Hiba a klántörlése során:");
     }
 });
 
@@ -278,17 +299,17 @@ app.put('/api/clans/:id', auth, async (req, res, next) => {
             return Code404("Nincs ilyen klán", req, res, next);
         }
 
-        const isLeader = await ClanMembers.findOne({ where: { userId: userId, role: "Leader" }});
+        const isLeader = await ClanMembers.findOne({ where: { userId: userId, clanId: id, role: "Leader" }});
 
         if(!isLeader){
-            Code403("Nincs jogosultságod a klán módosításához", req, res, next);
+            return Code403("Nincs jogosultságod a klán módosításához", req, res, next);
         }
 
         if(newClanName && newClanName != clan.name ){
             clan.name = newClanName;
         }
-        if(newClanGame && newClanGame != clan.game){
-            clan.game = newClanGame;
+        if(newClanGame && newClanGame != clan.gameId){
+            clan.gameId = newClanGame;
         }
         if(newClanDescription && newClanDescription != clan.description){
             clan.description = newClanDescription;
@@ -327,40 +348,46 @@ app.post('/api/clans/:id/join', auth, async (req, res, next) => {
 });
 
 app.post('/api/clans/:id/leave', auth, async (req, res, next) => {
-    try{
+    try {
         const { userId } = req.user;
         const { id } = req.params;
 
         const clan = await Clans.findByPk(id);
-        if(!clan){
-            return Code404("Nincs ilyen klán", req, res, next);
+        if (!clan) {
+            return Code404(null, req, res, next, "Nincs ilyen klán");
         }
-        
-        //! Ezt át kell írni, hogy a clanMembers táblából ellenőrizze, hogy leader-e a user
-        let newOwnerId = null;
-        if (clan.createrId === userId) {
+
+        const memberLeaving = await ClanMembers.findOne({ where: { clanId: id, userId: userId } });
+        if (!memberLeaving) {
+            return Code403(null, req, res, next, "Nem vagy tagja ennek a klánnak.");
+        }
+
+        if (memberLeaving.role === 'leader') {
             const oldestMember = await ClanMembers.findOne({
-                where: { clanId: id, userId: { [Op.ne]: userId } },
+                where: {
+                    clanId: id,
+                    userId: { [Op.ne]: userId }
+                },
                 order: [['createdAt', 'ASC']]
             });
-            //console.log("\n\nSikeresen belep az elagazasba (239)\n\n");
+
             if (oldestMember) {
-                newOwnerId = oldestMember.userId;
-                console.log("\n\n oldest" + oldestMember.userId  + "\n\n")
-                await ClanMembers.update({ role: "leader" }, { where: { clanId: id, userId: newOwnerId }});
-                await Clans.update({ ownerId: newOwnerId }, {where: { id: id }})
-                //console.log("\n\nSikeresen belep az elagazasba (244)\n\n");
+                const newLeaderId = oldestMember.userId;
+
+                await clan.update({ ownerId: newLeaderId });
+                await oldestMember.update({ role: 'leader' });
             } else {
-                await ClanMembers.destroy({ where: { clanId: id }});
+
+                await ClanMembers.destroy({ where: { clanId: id } });
                 await Clans.destroy({ where: { id: id } });
                 return res.status(200).json({ message: "Kiléptél, és mivel egyedül voltál, a klán törölve lett." });
             }
         }
-        
-        const removeMemberFromClan = await ClanMembers.destroy({ where: { clanId: id, userId: userId }});
-        res.status(200).json({ message: "Sikeresen kiléptél a klánból" });
-    }catch(err){
-        console.error("Hiba tortent a klan kilepese soran", err);
+        await memberLeaving.destroy();
+
+        return res.status(200).json({ message: "Sikeresen kiléptél a klánból" });
+    } catch (err) {
+        console.error("Hiba történt a klánból való kilépés során", err);
         return Code500(err, req, res, next);
     }
 });
@@ -418,7 +445,7 @@ app.get('/api/messages/:clanId', auth, async (req, res, next) => {
             }
         }
 
-        res.status(200).json(messages);
+        res.status(200).json({ clanName: clanData.name ,messages });
     } catch (err) {
         console.error("Hiba történt a klán üzenetének lekérése során", err);
         return Code500("Hiba történt a klán üzenetének lekérése során", req, res, next);
@@ -452,8 +479,69 @@ app.post('/api/messages/:clanId', auth, async (req, res, next) => {
         console.error("Hiba történt az üzenet elküldése során");
         return Code500("Hiba történt az üzenet elküldése során", req, res, next);
     }
+});
 
-})
+
+//* Index oldal API végpontjai
+app.get('/api/famous-games', async (req, res, next) => {
+    try {
+        const famousGamesData = await Clans.findAll({
+            attributes: [
+                [sequelize.fn('COUNT', sequelize.col('Clans.gameId')), 'totalGameCount']
+            ],
+            include: [{
+                model: Games,
+                as: 'game',
+                attributes: ['id', 'gameName'],
+                required: true
+            }],
+            group: ['game.id', 'game.gameName'],
+            order: [[sequelize.literal('totalGameCount'), 'DESC']],
+            limit: 5
+        });
+
+        const games = famousGamesData.map(item => ({
+            id: item.game.id,
+            gameName: item.game.gameName,
+            totalGameCount: parseInt(item.get('totalGameCount'), 10)
+        }));
+
+        res.status(200).json({ games });
+    } catch (err) {
+        console.error("Hiba történt a híres játékok lekérdezése során", err);
+        return Code500(err, req, res, next);
+    }
+});
+
+app.get('/api/famous-clans', async (req, res, next) => {
+    try {
+        const famousClansData = await ClanMembers.findAll({
+            attributes: [
+                [sequelize.fn('COUNT', sequelize.col('ClanMembers.clanId')), 'totalClanCount']
+            ],
+            include: [{
+                model: Clans,
+                as: 'clan',
+                attributes: ['id', 'name'],
+                required: true
+            }],
+            group: ['clan.id', 'clan.name'],
+            order: [[sequelize.literal('totalClanCount'), 'DESC']],
+            limit: 5
+        });
+        const clans = famousClansData.map(item => ({
+            id: item.clan.id,
+            clanName: item.clan.name,
+            currentClanMembersCount: parseInt(item.get('totalClanCount'), 10)
+        }));
+        res.status(200).json({ clans });
+    } catch (err) {
+        console.error("Hiba történt a híres klánok lekérdezése során", err);
+        return Code500(err, req, res, next);
+    }
+});
+
+
 
 
 

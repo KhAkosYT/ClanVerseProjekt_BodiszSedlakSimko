@@ -524,15 +524,22 @@ app.get('/api/famous-clans', async (req, res, next) => {
                 model: Clans,
                 as: 'clan',
                 attributes: ['id', 'name'],
-                required: true
+                required: true,
+                include: [{
+                    model: Games,
+                    as: 'game',
+                    attributes: ['gameName', 'logo']
+                }]
             }],
-            group: ['clan.id', 'clan.name'],
+            group: ['clan.id', 'clan.name', 'clan.game.id', 'clan.game.gameName', 'clan.game.logo'],
             order: [[sequelize.literal('totalClanCount'), 'DESC']],
             limit: 5
         });
         const clans = famousClansData.map(item => ({
             id: item.clan.id,
             clanName: item.clan.name,
+            gameName: item.clan.game.gameName,
+            gameLogo: item.clan.game.logo,
             currentClanMembersCount: parseInt(item.get('totalClanCount'), 10)
         }));
         res.status(200).json({ clans });

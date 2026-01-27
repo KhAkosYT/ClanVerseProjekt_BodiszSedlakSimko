@@ -1,0 +1,82 @@
+[
+    {
+        "gameName": "League of Legends",
+        "logo": "gameLogos/league_of_legends.png"
+    },
+    {
+        "gameName": "Counter-Strike 2",
+        "logo": "gameLogos/counter_strike_2.png"
+    },
+    {
+        "gameName": "Fortnite",
+        "logo": "gameLogos/fortnite.png"
+    },
+    {
+        "gameName": "Valorant",
+        "logo": "gameLogos/valorant.png"
+    },
+    {
+        "gameName": "Minecraft",
+        "logo": "gameLogos/minecraft.png"
+    },
+    {
+        "gameName": "Grand Theft Auto V",
+        "logo": "gameLogos/gta_v.png"
+    },
+    {
+        "gameName": "Call of Duty: Warzone",
+        "logo": "gameLogos/cod_warzone.png"
+    },
+    {
+        "gameName": "Apex Legends",
+        "logo": "gameLogos/apex_legends.png"
+    },
+    {
+        "gameName": "Dota 2",
+        "logo": "gameLogos/dota_2.png"
+    },
+    {
+        "gameName": "Overwatch 2",
+        "logo": "gameLogos/overwatch_2.png"
+    },
+    {
+        "gameName": "PUBG: Battlegrounds",
+        "logo": "gameLogos/pubg_battlegrounds.png"
+    },
+    {
+        "gameName": "Rocket League",
+        "logo": "gameLogos/rocket_league.png"
+    },
+    {
+        "gameName": "Elden Ring",
+        "logo": "gameLogos/elden_ring.png"
+    },
+    {
+        "gameName": "Roblox",
+        "logo": "gameLogos/roblox.png"
+    },
+    {
+        "gameName": "Genshin Impact",
+        "logo": "gameLogos/genshin_impact.png"
+    },
+    {
+        "gameName": "The Witcher 3: Wild Hunt",
+        "logo": "gameLogos/witcher_3.png"
+    },
+    {
+        "gameName": "Rainbow Six Siege",
+        "logo": "gameLogos/rainbow_six_siege.png"
+    },
+    {
+        "gameName": "Among Us",
+        "logo": "gameLogos/among_us.png"
+    },
+    {
+        "gameName": "Red Dead Redemption 2",
+        "logo": "gameLogos/rdr2.png"
+    },
+    {
+        "gameName": "FC 24",
+        "logo": "gameLogos/fc_24.png"
+    }
+]

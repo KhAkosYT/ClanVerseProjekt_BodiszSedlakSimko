@@ -5,22 +5,29 @@ const Games = require('../models/games');
 
 async function seedGames() {
     try {
-        const filePath = path.join(__dirname, '../data/games.txt');
+        // A fájl kiterjesztése .json lesz az átnevezés után
+        const filePath = path.join(__dirname, '../data/games.json');
         const fileContent = fs.readFileSync(filePath, 'utf8');
-        const gameNames = fileContent
-            .split('\n')
-            .map(line => line.trim())
-            .filter(line => line.length > 0);
+        const gamesList = JSON.parse(fileContent);
 
         await sequelize.sync();
 
-        for (const name of gameNames) {
-            await Games.findOrCreate({
-                where: { gameName: name }
+        for (const gameInfo of gamesList) {
+            const [game, created] = await Games.findOrCreate({
+                where: { gameName: gameInfo.gameName },
+                defaults: {
+                    logo: gameInfo.logo
+                }
             });
+
+            // Ha már létezett a játék, de a logója nem egyezik (pl. default volt), frissítjük
+            if (!created && game.logo !== gameInfo.logo) {
+                game.logo = gameInfo.logo;
+                await game.save();
+            }
         }
 
-        console.log(`Sikeres feltöltés! (${gameNames.length} játék)`);
+        console.log(`Sikeres feltöltés! (${gamesList.length} játék)`);
     } catch (err) {
         console.error('Hiba a seedelés során:', err);
         throw err;

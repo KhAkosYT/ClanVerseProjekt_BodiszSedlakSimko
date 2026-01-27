@@ -24,7 +24,7 @@ function checkFileType(file, cb) {
     }
 }
 
-const upload = multer({
+const uploadPfp = multer({
     storage: storage,
     limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
     fileFilter: (req, file, cb) => {
@@ -33,7 +33,7 @@ const upload = multer({
 });
 
 module.exports = (req, res, next) => {
-    upload.single('profilePicture')(req, res, (err) => {
+    uploadPfp.single('profilePicture')(req, res, (err) => {
         if (err) {
             if (err.code === 'LIMIT_FILE_SIZE') {
                 return res.status(400).json({ message: "A feltöltött fájl túl nagy! Kérlek válassz kisebb képet." });

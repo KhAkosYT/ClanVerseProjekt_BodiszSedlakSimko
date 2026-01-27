@@ -13,6 +13,11 @@ const Games = sequelize.define('Games', {
         allowNull: false,
         unique: true
     },
+    logo: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+        defaultValue: 'gameLogos/gameNotFound.jpg'
+    }
 }, {
     tableName: 'games',
     timestamps: true,

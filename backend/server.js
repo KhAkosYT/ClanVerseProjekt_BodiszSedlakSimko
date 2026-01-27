@@ -17,7 +17,7 @@ const seedGames = require('./seeds/gamesSeed');
 
 //middleware import-ok
 const auth = require('./middleware/auth');
-const upload = require('./middleware/uploadPfp');
+const uploadPfp = require('./middleware/uploadPfp');
 
 //App import-ok
 const express = require('express');
@@ -109,7 +109,7 @@ app.get('/api/users/profile', auth, async(req, res, next) => {
     res.status(200).json({ userName: userData.username, email: userData.email, profilePicture: userData.profilePicture });
 });
 
-app.put('/api/users/profile', auth, upload, async (req, res, next) => {
+app.put('/api/users/profile', auth, uploadPfp, async (req, res, next) => {
     const { userId } = req.user;
 
     const { newUserName, newEmail, currPass, newPass } = req.body;
@@ -492,7 +492,7 @@ app.get('/api/famous-games', async (req, res, next) => {
             include: [{
                 model: Games,
                 as: 'game',
-                attributes: ['id', 'gameName'],
+                attributes: ['id', 'gameName', 'logo'],
                 required: true
             }],
             group: ['game.id', 'game.gameName'],
@@ -503,6 +503,7 @@ app.get('/api/famous-games', async (req, res, next) => {
         const games = famousGamesData.map(item => ({
             id: item.game.id,
             gameName: item.game.gameName,
+            logo: item.game.logo,
             totalGameCount: parseInt(item.get('totalGameCount'), 10)
         }));
 

@@ -18,6 +18,7 @@ const seedGames = require('./seeds/gamesSeed');
 //middleware import-ok
 const auth = require('./middleware/auth');
 const uploadPfp = require('./middleware/uploadPfp');
+const uploadGameLogo = require('./middleware/uploadGameLogo');
 
 //App import-ok
 const express = require('express');
@@ -53,7 +54,7 @@ seedGames();
 
 
 
-app.post('/api/users/register', async (req, res, next) => {
+app.post('/api/users/register', uploadPfp, async (req, res, next) => {
     const { username, email, password } = req.body;
     if(!username || !email || !password){
         return Code400(null, req, res, next, "Hiányzó adatok.");
@@ -64,7 +65,12 @@ app.post('/api/users/register', async (req, res, next) => {
             return Code409(null, req, res, next, "Már létezik ezzel az email címmel fiók.");
         }
 
-        const hashedPassword = await bcrypt.hash(password, config.hashIterations); 
+        const hashedPassword = await bcrypt.hash(password, config.hashIterations);
+
+        if(req.file){
+            const newUser = await Users.create({ username, email, password: hashedPassword, profilePicture: 'profilePictures/' + req.file.filename });
+            return  res.status(201).json({ message: "Sikeres regisztráció."});
+        }
 
         const newUser = await Users.create({ username, email, password: hashedPassword });
         res.status(201).json({ message: "Sikeres regisztráció."});
@@ -550,6 +556,30 @@ app.get('/api/famous-clans', async (req, res, next) => {
 });
 
 
+app.post('/api/admin/upload-game', auth, uploadGameLogo, async (req, res, next) => {
+    const { userId, isAdmin } = req.user;
+    const { gameName } = req.body;
+    if(!isAdmin){
+        return Code403(null, req, res, next, "Nincs jogosultságod a játék feltöltéséhez.");
+    }
+    try {
+        if (!gameName) {
+            return Code400(null, req, res, next, "Hiányzó adatok.");
+        }
+        const existingGame = await Games.findOne({ where: { gameName } });
+        if (existingGame) {
+            return Code409(null, req, res, next, "Már létezik ilyen néven játék.");
+        }
+        let logoPath = 'gameLogos/gameNotFound.jpg';
+        if (req.file) {
+            logoPath = 'gameLogos/' + req.file.filename;
+        }
+        const newGame = await Games.create({ gameName, logo: logoPath });
+        res.status(201).json({ message: "Játék sikeresen hozzáadva.", game: { id: newGame.id, gameName: newGame.gameName, logo: newGame.logo } });
+    } catch (error) {
+        return Code500(error, req, res, next);
+    }
+});
 
 
 

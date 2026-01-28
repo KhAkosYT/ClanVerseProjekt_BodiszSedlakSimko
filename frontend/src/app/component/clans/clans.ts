@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-// import { RouterLink } from "@angular/router";
+import { Router } from '@angular/router';
 
 interface Member {
   name: string;
@@ -28,7 +28,7 @@ export class Clans implements OnInit {
   editGameSuggestions: any[] = [];
   editingClanId: string | null = null;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     console.log('Clans component constructor called');
   }
 
@@ -40,8 +40,7 @@ export class Clans implements OnInit {
 
       this.http.get('http://localhost:3000/api/clans', { headers }).subscribe({
         next: (datas) => {
-          const innerClansData = datas as any; // Objektum, ami listát tartalmaz
-          const clansData = innerClansData.clans;
+          const clansData = datas as any[];
           //console.log('Clans data received:', datas);
           
 
@@ -54,7 +53,7 @@ export class Clans implements OnInit {
               cardDiv.innerHTML = `
                 <div class="card-body">
                   <h5 class="card-title">${clan.name}</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">${clan.game.gameName}</h6>
+                  <h6 class="card-subtitle mb-2 text-body-secondary">${clan.gameName}</h6>
                   <a class="card-link" id="openClan">Részletek</a>
                 </div>
                 `;
@@ -90,7 +89,7 @@ export class Clans implements OnInit {
         next: (data) => {
           const innerClanData = data as any; // Objektum, ami listát tartalmaz
           const clan = innerClanData.clanData;
-          const allMembers = innerClanData.allClanMembers;
+          const allMembers = clan.allMembers;
 
           const clanDetailsContainer = document.querySelector('.clan-details-container');
           if (clanDetailsContainer) {
@@ -111,9 +110,7 @@ export class Clans implements OnInit {
             `;
             const membersDiv = document.querySelector('.members');
             if (membersDiv) {
-              // Az allMembers objektum értékeit tömbbe alakítjuk, hogy iterálható legyen
-              const membersArray = Object.values(allMembers) as Member[];
-              for (const member of membersArray) {
+              for (const member of allMembers) {
                 const p = document.createElement('p');
                 p.innerHTML = `Név: ${member.name} Szerep: ${member.role}`;
                 membersDiv.appendChild(p);
@@ -151,6 +148,11 @@ export class Clans implements OnInit {
                 joinBtn.addEventListener('click', () => this.onJoin(clanId));
                 buttonDiv.appendChild(joinBtn);
               }
+
+              const messageButton = document.createElement('button');
+              messageButton.textContent = 'Chat megnyitása';
+              messageButton.addEventListener('click', () => this.openMessage(clan.id));
+              buttonDiv.appendChild(messageButton);
             }
             
 
@@ -241,6 +243,9 @@ export class Clans implements OnInit {
       });
     }
   }
+  openMessage(clanid: string): void{
+    this.router.navigate(['/message', clanid]);
+  }
 
   onEditGameInput(event: any) {
     const value = this.editGameName.trim();
@@ -326,10 +331,5 @@ export class Clans implements OnInit {
       });
     }
   }
-
-
-
-
-  
 
 }

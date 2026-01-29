@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
@@ -17,11 +17,15 @@ interface Message {
   templateUrl: './message.html',
   styleUrl: './message.css'
 })
-export class Messages implements OnInit {
+export class Messages implements OnInit, AfterViewChecked {
+  @ViewChild('scrollMe') private myScrollContainer!: ElementRef;
+
   clanId: string = ''; 
+  clanName: string = '';
   
   messages: Message[] = [];
   newMessage: string = '';
+  private shouldScroll = false;
   private apiUrl = 'http://localhost:3000/api/messages';
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {}
@@ -33,6 +37,13 @@ export class Messages implements OnInit {
     });
   }
 
+  ngAfterViewChecked() {
+    if (this.shouldScroll) {
+      this.scrollToBottom();
+      this.shouldScroll = false;
+    }
+  }
+
   private getHeaders() {
     const token = localStorage.getItem('token');
     return new HttpHeaders({
@@ -42,11 +53,21 @@ export class Messages implements OnInit {
   }
 
   loadMessages() {
-    this.http.get<Message[]>(`${this.apiUrl}/${this.clanId}`, { headers: this.getHeaders() })
+    this.http.get<any>(`${this.apiUrl}/${this.clanId}`, { headers: this.getHeaders() })
       .subscribe({
-        next: (data) => this.messages = data,
+        next: (data) => {
+          this.clanName = data.clanName;
+          this.messages = data.messages;
+          this.shouldScroll = true;
+        },
         error: (err) => console.error('Hiba az üzenetek lekérésekor', err)
       });
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    } catch(err) { }
   }
 
   sendMessage() {

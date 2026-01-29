@@ -15,8 +15,12 @@
   <div class="form-group">
     <label for="confirmPassword">Jelszó megerősítése</label>
     <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="confirmPassword" required placeholder="Erősítsd meg a jelszavad"/>
-    <p><strong style="color: red;">Regisztráljon be ahhoz, hogy további funkciókhoz férhessen!</strong></p>
-    <p><strong style="color: whitesmoke;">Ha már van fiókod, kattints ide a <a routerLink="/login">bejelentkezéshez!</a></strong></p>
+  </div>
+  <div class="form-group">
+    <label for="profilePicture">Profilkép (nem kötelező)</label>
+    <input type="file" id="profilePicture" name="profilePicture" (change)="onFileSelected($event)" accept="image/*" />
   </div>
   <button type="submit" [disabled]="!registrationForm.form.valid">Regisztráció</button>
+  <p><strong style="color: red;">Regisztráljon be ahhoz, hogy további funkciókhoz férhessen!</strong></p>
+  <p><strong style="color: whitesmoke;">Ha már van fiókod, kattints ide a <a routerLink="/login">bejelentkezéshez!</a></strong></p>
 </form>

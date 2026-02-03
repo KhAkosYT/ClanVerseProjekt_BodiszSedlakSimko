@@ -1,0 +1,31 @@
+footer {
+  background-color: transparent;
+  border-top: 1px solid rgba(0, 243, 255, 0.1);
+  margin-top: auto;
+  width: 100%;
+  position: relative;
+  color: #FFFFFF !important;
+}
+
+
+footer .nav-link {
+  color: #FFFFFF !important;
+  text-decoration: none;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+}
+
+footer .nav-link:hover {
+  color: #E0F7FA;
+  text-shadow: 0 0 15px rgba(0, 243, 255, 0.8);
+}
+
+footer p{
+  color: #FFFFFF !important;
+  margin: 0;
+  font-size: 0.9rem;
+  text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+}

@@ -49,12 +49,12 @@ export class Clans implements OnInit {
             for (const clan of clansData) {
               const cardDiv = document.createElement('div');
               cardDiv.setAttribute('class', 'card');
-              cardDiv.setAttribute('style', 'width: 18rem;');
+              cardDiv.setAttribute('style', 'width: 18rem; color: black; background-color: whitesmoke; cursor: pointer;');
               cardDiv.innerHTML = `
                 <div class="card-body">
                   <h5 class="card-title">${clan.name}</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">${clan.gameName}</h6>
-                  <a class="card-link" id="openClan">Részletek</a>
+                  <h6 class="card-subtitle mb-2 text-body-secondary" style>${clan.gameName}</h6>
+                  <a class="card-link" id="openClan" style="color: black; text-decoration: none;">Részletek</a>
                 </div>
                 `;
                 const openClanLink = cardDiv.querySelector('#openClan');
@@ -98,7 +98,7 @@ export class Clans implements OnInit {
             clanDetailsContainer.innerHTML = `
                   <div class="card-body">
                     <h5 class="card-title">${clan.name}</h5>
-                    <h6 class="card-subtitle mb-2 text-body-secondary">${clan.gameName}</h6>
+                    <h6 class="card-subtitle mb-2 text-body-secondary" style=" color: #E0F7FA !important;">${clan.gameName}</h6>
                     <p class="card-text">${clan.description}</p>
                     <div class="members">
                       <!-- ide jönnek a tagok -->

@@ -2,7 +2,9 @@
     display: flex;
     justify-content: center;
     gap: 20px;
+    flex-wrap: wrap;
     padding: 20px;
+    color: #E0F7FA;
 }
 .clan-details-container {
     background-color: rgba(15, 23, 36, 0.95);

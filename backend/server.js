@@ -398,6 +398,37 @@ app.post('/api/clans/:id/leave', auth, async (req, res, next) => {
     }
 });
 
+app.post('/api/clans/:id/kick/:memberUserId', auth, async (req, res, next) => {
+    try {
+        const { userId } = req.user;
+        const { id, memberUserId } = req.params;
+
+        const clan = await Clans.findByPk(id);
+        if (!clan) {
+            return Code404("Nincs ilyen klán", req, res, next);
+        }
+
+        const isLeader = await ClanMembers.findOne({ where: { userId: userId, clanId: id, role: "Leader" }});
+        if (!isLeader) {
+            return Code403("Nincs jogosultságod a klán tagjainak kirúgásához", req, res, next);
+        }
+
+        const memberToKick = await ClanMembers.findOne({ where: { clanId: id, userId: targetUserId }});
+        if (!memberToKick) {
+            return Code404("A megadott felhasználó nem tagja a klánnak", req, res, next);
+        }
+
+        if (memberToKick.role === 'leader') {
+            return Code403("Nem tudod kirúgni a klán vezetőjét", req, res, next);
+        }
+
+        await memberToKick.destroy();
+        res.status(200).json({ message: "Sikeresen kirúgtad a tagot a klánból" });
+    } catch (err) {
+        console.error("Hiba történt a klán tagjainak kirúgása során", err);
+        return Code500(err, req, res, next);
+    }
+});
 
 app.get('/api/games', async (req, res, next) => {
     try {

@@ -85,38 +85,18 @@ ___
 
 ```json
   {
-      "clan": {
-          "id": 1,
-          "createrId": 1,
-          "ownerId": 1,
-          "name": "Klan Nev",
-          "gameId": 9,
-          "description": "Klan Leiras",
-          "createdAt": "2025-12-10 16:04:10",
-          "updatedAt": "2025-12-10 16:04:10"
-      },
-      "allClanMembers": [
-          {
-              "id": 1,
-              "clanId": 1,
-              "userId": 1,
-              "role": "leader",
-              "createdAt": "2025-12-10 16:04:10",
-              "updatedAt": "2025-12-10 16:04:10"
-          },
-          {
-              "id": 2,
-              "clanId": 1,
-              "userId": 2,
-              "role": "member",
-              "createdAt": "2025-12-10 16:09:09",
-              "updatedAt": "2025-12-10 16:09:09"
-          }
-      ],
-      "allClanMembersName": {
-          "1": "Asd",
-          "2": "Akos"
-      },
+    "clanData": {
+        "id": 1,
+        "name": "Teszt klán",
+        "gameName": "Minecraft",
+        "description": "Ez itt a klan leirasa.",
+        "allMembers": [
+            {
+                "name": "enn",
+                "role": "leader"
+            }
+        ]
+    },
       //HA LEADER, CSAK AZ "EDITABLE"-T KAPJA, NEM KAP "CANJOIN"-T
       "editable": true,
       //HA NEM LEADER A ROLE ES NEM KLAN TAG:
@@ -147,7 +127,7 @@ ___
 
 ___
 
-1. **/api/clans/:id** <br>
+7. **/api/clans/:id** <br>
    <ins>**Elvárt értékek**</ins>, amiket kér az api végpont
    - id ({object}; ezt az urlből olvassa ki, ha nem megy úgyis segítek, mert mindenre írtam saját frontend-et)
    - userId ({object}; ezt a tokenből olvassa ki, ami ugye a localstorage-ben van eltárolva)
@@ -202,11 +182,81 @@ ___
 
 ___
 
-1.  **/api/games** <br>
+11.  **/api/games** <br>
     <ins>**Elvárt értékek**</ins>, amiket kér az api végpont
-    - az api url így néz ki a fronton: **http://localhost:3000/api/games?search=${encodeURIComponent(game)}**
 
-    - HTTP **POST** metódus
-    - Lényegében ez annyit tesz, hogy **minden alkalommal**, amikor a **klán létrehozásnál** (?később? a klán keresésnél) írnak a **játék input mezőbe**, akkor hívódik meg ez mindig *(addEventListener("input") ...)*, és folyamatosan azokat a klánokat küldi vissza a frontra, amelyiknek a nevében van egyezés.
-    - Legegyszerűbb példa: beírom, hogy **"lea"**, akkor kiadja a *League of Legends-et*, a *Rocket Leage-et* stb stb.
-    - Ha valamiért **nem tudja lekérni** a **jétéko(ka)t**, akkor **500-as státusz kóddal** tér vissza.
+ - az api url így néz ki a fronton: **http://localhost:3000/api/games?search=${encodeURIComponent(game)}**
+
+ - HTTP **POST** metódus
+
+ - Lényegében ez annyit tesz, hogy **minden alkalommal**, amikor a **klán létrehozásnál** (?később? a klán keresésnél) írnak a **játék input mezőbe**, akkor hívódik meg ez mindig *(addEventListener("input") ...)*, és folyamatosan azokat a klánokat küldi vissza a frontra, amelyiknek a nevében van egyezés.
+ - Legegyszerűbb példa: beírom, hogy **"lea"**, akkor kiadja a *League of Legends-et*, a *Rocket Leage-et* stb stb.
+ - Ha valamiért **nem tudja lekérni** a **jétéko(ka)t**, akkor **500-as státusz kóddal** tér vissza.
+
+___
+
+12. **/api/clans/:id/kick/:memberUserId** <br>
+<ins>**Elvárt értékek**</ins>, amiket kér az api végpont
+
+- id (URL paraméter; a klán azonosítója)
+- memberUserId (URL paraméter; a kirúgni kívánt felhasználó azonosítója)
+- userId (a tokenből kerül kiolvasásra)
+
+- HTTP **POST** metódus
+- Ha **nem létezik a klán** az adott ID-val, akkor **404-es státuszkóddal** és **"Nincs ilyen klán" MESSAGE-el** tér vissza
+- A rendszer ellenőrzi, hogy a kérést indító felhasználó a klán **Leader-e**. Ha nem, **403-as státuszkóddal** és **"Nincs jogosultságod a klán tagjainak kirúgásához" MESSAGE-el** tér vissza
+- Ha a célszemély **nem tagja a klánnak**, akkor **404-es státuszkóddal** és **"A megadott felhasználó nem tagja a klánnak" MESSAGE-el** tér vissza
+- **Vezetőt nem lehet kirúgni**: ha a célszemély role-ja **"leader"**, akkor **403-as státuszkóddal** és **"Nem tudod kirúgni a klán vezetőjét" MESSAGE-el** tér vissza
+- Sikeres törlés esetén **200-as státuszkóddal** és **"Sikeresen kirúgtad a tagot a klánból" MESSAGE-el** tér vissza
+- Hiba esetén (adatbázis hiba) **500-as státuszkóddal** tér vissza
+
+___
+
+13.  **/api/messages/:clanId** <br>
+<ins>**Elvárt értékek**</ins>, amiket kér az api végpont
+
+- clanId (URL paraméter)
+- userId (a tokenből kerül kiolvasásra)
+- message (csak POST kérésnél, body-ban küldve)
+
+HTTP **GET** metódus *(Üzenetek lekérése)*:
+- Ellenőrzi, hogy a felhasználó tagja-e a klánnak. Ha nem, **403-as státuszkód** és **"Nincs jogosultságod a klán üzeneteinek lekéréséhez" MESSAGE**
+- Ha a klán nem létezik, **404-es hiba**
+- Siker esetén visszaadja a **clanName-et** és egy **messages tömböt (sender, message, time)**, **200-as státuszkóddal**
+
+HTTP **POST** metódus *(Üzenet küldése)*:
+- Csak klántagok küldhetnek üzenetet (**403-as hiba**, ha nem tag)
+- Ha hiányzik a klán, **404-es hiba**
+- Siker esetén létrehozza az üzenetet és **200-as státuszkóddal**, valamint **"Sikeres üzenetküldés" MESSAGE-el** tér vissza
+
+___
+
+14. **/api/famous-games**
+
+- HTTP **GET** metódus
+- Lekéri az **5 legnépszerűbb játékot** az alapján, hogy mennyi klán van hozzájuk rendelve
+- **200-as státuszkóddal** visszaküld egy **"games" tömböt (id, gameName, logo, totalGameCount)**
+
+___
+
+15. **/api/famous-clans**
+
+- HTTP **GET** metódus
+- Lekéri az **5 legnagyobb létszámú klánt**
+- **200-as státuszkóddal** visszaküld egy **"clans" tömböt (id, clanName, gameName, gameLogo, currentClanMembersCount)**
+
+___
+
+16. **/api/admin/upload-game** <br>
+<ins>**Elvárt értékek**</ins>, amiket kér az api végpont
+
+- gameName (body)
+- logo (file formátumban)
+- isAdmin (tokenből kerül ellenőrzésre)
+
+- HTTP **POST** metódus
+- Ha a felhasználó **nem admin**, akkor **403-as státuszkóddal** és **"Nincs jogosultságod a játék feltöltéséhez." MESSAGE-el** tér vissza
+- Ha hiányzik a gameName, akkor **400-as státuszkód** és **"Hiányzó adatok."**
+- Ha a játék már létezik (név alapján), akkor **409-es státuszkód** és **"Már létezik ilyen néven játék."**
+- A backend kezeli a fájlfeltöltést: ha nincs kép, a **gameLogos/gameNotFound.jpg** lesz az alapértelmezett
+- Siker esetén **201-es státuszkóddal**, **"Játék sikeresen hozzáadva." MESSAGE-el**, valamint a játék adataival tér vissza

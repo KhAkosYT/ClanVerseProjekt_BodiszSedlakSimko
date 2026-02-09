@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,7 +13,8 @@ interface Member {
   selector: 'app-clans',
   imports: [CommonModule, FormsModule],
   templateUrl: './clans.html',
-  styleUrl: './clans.css'
+  styleUrl: './clans.css',
+  encapsulation: ViewEncapsulation.None
 })
 
 export class Clans implements OnInit {
@@ -48,16 +49,16 @@ export class Clans implements OnInit {
           if (clansContainer) {
             for (const clan of clansData) {
               const cardDiv = document.createElement('div');
-              cardDiv.setAttribute('class', 'card');
-              cardDiv.setAttribute('style', 'width: 18rem; color: black; background-color: whitesmoke; cursor: pointer;');
+              cardDiv.classList.add('card', 'clan-card-background');
+              cardDiv.setAttribute('style', 'width: 18rem; cursor: pointer;');
               cardDiv.innerHTML = `
                 <div class="card-body">
-                  <h5 class="card-title">${clan.name}</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary" style>${clan.gameName}</h6>
-                  <a class="card-link" id="openClan" style="color: black; text-decoration: none;">Részletek</a>
+                  <h5 class="card-title" style="color: #E0F7FA;">${clan.name}</h5>
+                  <h6 class="card-subtitle mb-2 text-body-secondary" style="color: #00f3ff !important;">${clan.gameName}</h6>
+                  <a class="card-link open-clan-link" style="color: white; text-decoration: none;">Részletek</a>
                 </div>
                 `;
-                const openClanLink = cardDiv.querySelector('#openClan');
+                const openClanLink = cardDiv.querySelector('.open-clan-link');
               if (openClanLink){
                 openClanLink.addEventListener('click', () => this.fetchClanDetails(clan.id));
               }
@@ -98,7 +99,7 @@ export class Clans implements OnInit {
             clanDetailsContainer.innerHTML = `
                   <div class="card-body">
                     <h5 class="card-title">${clan.name}</h5>
-                    <h6 class="card-subtitle mb-2 text-body-secondary" style=" color: #E0F7FA !important;">${clan.gameName}</h6>
+                    <h6 class="card-subtitle mb-2 text-body-secondary" style=" color: #00f3ff !important;">${clan.gameName}</h6>
                     <p class="card-text">${clan.description}</p>
                     <div class="members">
                       <!-- ide jönnek a tagok -->

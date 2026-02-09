@@ -23,6 +23,26 @@
     margin: 0 auto;
 }
 
+@property --gradient-angle {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
+}
+
+.card.clan-card-background{
+    background: linear-gradient(var(--gradient-angle), #4169E1, #0D3B66) !important;
+    animation: rotateGradient 5s linear infinite !important;
+}
+
+@keyframes rotateGradient {
+    0% {
+        --gradient-angle: 0deg;
+    }
+    100% {
+        --gradient-angle: 360deg;
+    }
+}
+
 .modal-overlay {
     position: fixed;
     top: 0;

@@ -28,6 +28,7 @@ export class Clans implements OnInit {
   editGameName: string = '';
   editGameSuggestions: any[] = [];
   editingClanId: string | null = null;
+  clanData: any = null;
 
   constructor(private http: HttpClient, private router: Router) {
     console.log('Clans component constructor called');
@@ -88,81 +89,16 @@ export class Clans implements OnInit {
     
       this.http.get(`http://localhost:3000/api/clans/${clanId}`, { headers }).subscribe({
         next: (data) => {
-          const innerClanData = data as any; // Objektum, ami listát tartalmaz
-          const clan = innerClanData.clanData;
-          const allMembers = clan.allMembers;
-
-          const clanDetailsContainer = document.querySelector('.clan-details-container');
-          if (clanDetailsContainer) {
-            console.log(innerClanData)
-            
-            clanDetailsContainer.innerHTML = `
-                  <div class="card-body">
-                    <h5 class="card-title">${clan.name}</h5>
-                    <h6 class="card-subtitle mb-2 text-body-secondary" style=" color: #00f3ff !important;">${clan.gameName}</h6>
-                    <p class="card-text">${clan.description}</p>
-                    <div class="members">
-                      <!-- ide jönnek a tagok -->
-                    </div>
-                    <div class="buttons">
-                      
-                    </div>
-                  </div>
-            `;
-            const membersDiv = document.querySelector('.members');
-            if (membersDiv) {
-              for (const member of allMembers) {
-                const p = document.createElement('p');
-                p.innerHTML = `Név: ${member.name} Szerep: ${member.role}`;
-                membersDiv.appendChild(p);
-              }
-            }
-
-            const buttonDiv = document.querySelector('.buttons');
-            if(buttonDiv) {
-              buttonDiv.innerHTML = ''; 
-              if(innerClanData.editable){
-                const updateBtn = document.createElement('button');
-                updateBtn.textContent = 'Klán módosítása';
-                updateBtn.addEventListener('click', () => this.openEditModal(clan));
-                buttonDiv.appendChild(updateBtn);
-
-                const deleteBtn = document.createElement('button');
-                deleteBtn.textContent = 'Klán törlése';
-                deleteBtn.addEventListener('click', () => this.deleteClan(clanId));
-                buttonDiv.appendChild(deleteBtn);
-
-                const leaveBtn = document.createElement('button');
-                leaveBtn.textContent = 'Kilépés a klánból';
-                leaveBtn.addEventListener('click', () => this.leaveClan(clanId));
-                buttonDiv.appendChild(leaveBtn);
-              }
-              if(innerClanData.canJoin === false){
-                const leaveBtn = document.createElement('button');
-                leaveBtn.textContent = 'Kilépés a klánból';
-                leaveBtn.addEventListener('click', () => this.leaveClan(clanId));
-                buttonDiv.appendChild(leaveBtn);
-              }
-              if(innerClanData.canJoin === true){
-                const joinBtn = document.createElement('button');
-                joinBtn.textContent = 'Belépés a klánba';
-                joinBtn.addEventListener('click', () => this.onJoin(clanId));
-                buttonDiv.appendChild(joinBtn);
-              }
-
-              const messageButton = document.createElement('button');
-              messageButton.textContent = 'Chat megnyitása';
-              messageButton.addEventListener('click', () => this.openMessage(clan.id));
-              buttonDiv.appendChild(messageButton);
-            }
-            
-
-            
-          }
+          const responseData = data as any;
+          this.clanData = {
+            ...responseData.clanData,
+            editable: responseData.editable,
+            canJoin: responseData.canJoin
+          };
         },
         error: (err) => {
           console.error('Hiba a klán részletek lekérésekor:', err);
-          
+          this.clanData = null;
         }
       });
     }

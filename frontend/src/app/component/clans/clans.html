@@ -1,8 +1,50 @@
+<div class="welcome-header">
+  <h1>Üdvözöljük a klánok oldalán!</h1>
+  <p class="welcome-subtitle">Egy hely, ahol a játékosok találkoznak, csapatok születnek, és közös célok formálódnak.<br>A klánok nemcsak a győzelemről szólnak, hanem a fejlődésről, az együttműködésről és az élményekről.</p>
+  <p class="welcome-subtitle call-to-action">Csatlakozz egy klánhoz, vagy hozz létre saját közösséget, és alakítsd te a játék jövőjét.</p>
+</div>
 <div class="clans-container">
-
+  
 </div>
 <div class="clan-details-container">
+  <div *ngIf="clanData" class="card-body">
+    <h5 class="card-title">{{ clanData.name }}</h5>
+    <h6 class="card-subtitle mb-2 text-body-secondary" style="color: #00f3ff !important;">{{ clanData.gameName }}</h6>
+    <p class="card-text">{{ clanData.description }}</p>
+      <h3>Tagok</h3>
+      <table class="members-table">
+        <thead>
+          <tr>
+            <th>Név</th>
+            <th>Szerep</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let member of clanData.allMembers">
+            <td>{{ member.name }}</td>
+            <td>{{ member.role }}</td>
+          </tr>
+        </tbody>
+      </table>
+      
+    <div class="buttons">
+      <ng-container *ngIf="clanData.editable">
+        <button (click)="openEditModal(clanData)">Klán módosítása</button>
+        <button (click)="deleteClan(clanData.id)">Klán törlése</button>
+        <button (click)="leaveClan(clanData.id)">Kilépés a klánból</button>
+        <button (click)="openMessage(clanData.id)">Chat megnyitása</button>
+      </ng-container>
 
+      <ng-container *ngIf="!clanData.editable && clanData.canJoin === false">
+        <button (click)="leaveClan(clanData.id)">Kilépés a klánból</button>
+        <button (click)="openMessage(clanData.id)">Chat megnyitása</button>
+      </ng-container>
+
+      <ng-container *ngIf="!clanData.editable && clanData.canJoin === true">
+        <button (click)="onJoin(clanData.id)">Belépés a klánba</button>
+      </ng-container>
+    </div>
+  </div>
 </div>
 
 <div *ngIf="showEditModal" class="modal-overlay">

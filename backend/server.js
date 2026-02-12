@@ -14,6 +14,11 @@ const { createAccessToken } = require('./utils/jwt');
 
 //seed import(-ok) //? Még nem tudom, hogy egy fájlban lesz-e minden seed, vagy minden táblára lesz külön-külön
 const seedGames = require('./seeds/gamesSeed');
+const seedUsers = require('./seeds/usersSeed');
+const seedClans = require('./seeds/clansSeed');
+const seedClanMembers = require('./seeds/clanMembersSeed');
+const seedMessages = require('./seeds/messagesSeed');
+
 
 //middleware import-ok
 const auth = require('./middleware/auth');
@@ -43,14 +48,18 @@ app.use(
 app.use(express.static('public'));
 app.use('/uploads', express.static('uploads'));
 
-sequelize.sync().then(() => {
+sequelize.sync().then(async () => {
     console.log('Az adatbázis szinkronizálva.');
+
+    //! Első futtatáskor kell csak
+    await seedGames();
+    await seedUsers();
+    await seedClans();
+    await seedClanMembers();
+    await seedMessages();
 }).catch((err) => {
     console.error('Hiba az adatbázis szinkronizálásakor:', err);
 });
-
-//! Első futtatáskor kell csak
-seedGames();
 
 
 

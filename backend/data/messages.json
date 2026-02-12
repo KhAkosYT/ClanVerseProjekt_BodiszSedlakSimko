@@ -1,0 +1,101 @@
+[
+    {
+        "clanId": 1,
+        "userId": 1,
+        "text": "Üdvözlök mindenkit a moderátori klánban! Kérem a szabályzat betartását.",
+        "createdAt": "2025-09-02T12:00:00+02:00",
+        "updatedAt": "2025-09-02T12:00:00+02:00"
+    },
+    {
+        "clanId": 1,
+        "userId": 2,
+        "text": "Köszönöm a meghívást, figyelnem fogok!",
+        "createdAt": "2025-09-12T08:30:00+02:00",
+        "updatedAt": "2025-09-12T08:30:00+02:00"
+    },
+
+    {
+        "clanId": 2,
+        "userId": 2,
+        "text": "Sziasztok! Ez a klán a kezdők segítésére jött létre. Kérdezzetek bátran!",
+        "createdAt": "2025-09-15T16:00:00+02:00",
+        "updatedAt": "2025-09-15T16:00:00+02:00"
+    },
+
+    {
+        "clanId": 3,
+        "userId": 3,
+        "text": "Ma este 8-kor raidelünk, mindenki legyen online!",
+        "createdAt": "2025-10-11T14:20:00+02:00",
+        "updatedAt": "2025-10-11T14:20:00+02:00"
+    },
+
+    {
+        "clanId": 4,
+        "userId": 4,
+        "text": "Indul az éjszakai műszak, ki jön játszani?",
+        "createdAt": "2025-10-29T23:15:00+01:00",
+        "updatedAt": "2025-10-29T23:15:00+01:00"
+    },
+
+    {
+        "clanId": 5,
+        "userId": 5,
+        "text": "Csak a profik! Gratulálok mindenkinek a tegnapi győzelemhez.",
+        "createdAt": "2025-11-12T20:00:00+01:00",
+        "updatedAt": "2025-11-12T20:00:00+01:00"
+    },
+    {
+        "clanId": 5,
+        "userId": 7,
+        "text": "Szép volt csapat!", "createdAt": "2025-11-14T15:45:00+01:00",
+        "updatedAt": "2025-11-14T15:45:00+01:00"
+    },
+
+    {
+        "clanId": 6,
+        "userId": 6,
+        "text": "Boldog Mikulást mindenkinek utólag is!",
+        "createdAt": "2025-12-07T09:10:00+01:00",
+        "updatedAt": "2025-12-07T09:10:00+01:00"
+    },
+
+    {
+        "clanId": 7,
+        "userId": 10,
+        "text": "Szevasztok, a chat funkció tesztelés alatt áll.",
+        "createdAt": "2026-01-15T11:00:00+01:00",
+        "updatedAt": "2026-01-15T11:00:00+01:00"
+    },
+    {
+        "clanId": 7,
+        "userId": 1,
+        "text": "Vettem, nálam jól jelennek meg az üzenetek.",
+        "createdAt": "2026-01-15T11:05:00+01:00",
+        "updatedAt": "2026-01-15T11:05:00+01:00"
+    },
+
+    {
+        "clanId": 8,
+        "userId": 13,
+        "text": "Taktikai megbeszélés a Discordon 19:00-kor.",
+        "createdAt": "2026-02-08T17:30:00+01:00",
+        "updatedAt": "2026-02-08T17:30:00+01:00"
+    },
+
+    {
+        "clanId": 9,
+        "userId": 15,
+        "text": "Köszi, hogy ennyien beléptetek az új klánomba! <3",
+        "createdAt": "2026-02-22T20:00:00+01:00",
+        "updatedAt": "2026-02-22T20:00:00+01:00"
+    },
+
+    {
+        "clanId": 10,
+        "userId": 20,
+        "text": "Ez az utolsó klán, amit a vizsga előtt létrehoztunk. Sok sikert mindenkinek!",
+        "createdAt": "2026-03-15T10:30:00+01:00",
+        "updatedAt": "2026-03-15T10:30:00+01:00"
+    }
+]

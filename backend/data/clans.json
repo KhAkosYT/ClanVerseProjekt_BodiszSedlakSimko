@@ -1,0 +1,92 @@
+[
+  {
+    "createrId": 1,
+    "ownerId": 1,
+    "name": "Adminisztrátorok Rendje",
+    "gameId": 1,
+    "description": "A rendszergazdák és moderátorok hivatalos klánja.",
+    "createdAt": "2025-09-02T10:00:00+02:00",
+    "updatedAt": "2025-09-02T10:00:00+02:00"
+  },
+  {
+    "createrId": 1,
+    "ownerId": 2,
+    "name": "Kezdő Kalandozók",
+    "gameId": 1,
+    "description": "Tóth Anna vezetésével alakult közösség új játékosoknak.",
+    "createdAt": "2025-09-15T14:30:00+02:00",
+    "updatedAt": "2025-09-15T14:30:00+02:00"
+  },
+  {
+    "createrId": 3,
+    "ownerId": 3,
+    "name": "Petya Harcosai",
+    "gameId": 2,
+    "description": "Kovács Petya saját alapítású elit osztaga.",
+    "createdAt": "2025-10-10T09:15:00+02:00",
+    "updatedAt": "2025-10-10T09:15:00+02:00"
+  },
+  {
+    "createrId": 1,
+    "ownerId": 4,
+    "name": "Esti Farkasok",
+    "gameId": 3,
+    "description": "Szabó István klánja a kompetitív éjszakai játékokhoz.",
+    "createdAt": "2025-10-28T20:00:00+02:00",
+    "updatedAt": "2025-10-28T20:00:00+02:00"
+  },
+  {
+    "createrId": 5,
+    "ownerId": 5,
+    "name": "Réka's Legion",
+    "gameId": 2,
+    "description": "Csak profi szintű stratégák számára nyitott csoport.",
+    "createdAt": "2025-11-12T11:45:00+01:00",
+    "updatedAt": "2025-11-12T11:45:00+01:00"
+  },
+  {
+    "createrId": 6,
+    "ownerId": 6,
+    "name": "Varga Vitézei",
+    "gameId": 1,
+    "description": "Varga Balázs által alapított baráti társaság.",
+    "createdAt": "2025-12-05T15:20:00+01:00",
+    "updatedAt": "2025-12-05T15:20:00+01:00"
+  },
+  {
+    "createrId": 1,
+    "ownerId": 10,
+    "name": "Vizsga-Remek Tesztklán",
+    "gameId": 1,
+    "description": "A fejlesztői tesztekhez létrehozott gyűjtőcsoport.",
+    "createdAt": "2026-01-10T16:20:00+01:00",
+    "updatedAt": "2026-01-10T16:20:00+01:00"
+  },
+  {
+    "createrId": 13,
+    "ownerId": 13,
+    "name": "Szilágyi Szövetség",
+    "gameId": 3,
+    "description": "Taktikai alapokon nyugvó klán.",
+    "createdAt": "2026-02-01T09:30:00+01:00",
+    "updatedAt": "2026-02-01T09:30:00+01:00"
+  },
+  {
+    "createrId": 15,
+    "ownerId": 15,
+    "name": "Mónika Fan Club",
+    "gameId": 3,
+    "description": "Közösségi klán kötetlen esti játékokhoz.",
+    "createdAt": "2026-02-22T13:10:00+01:00",
+    "updatedAt": "2026-02-22T13:10:00+01:00"
+  },
+  {
+    "createrId": 20,
+    "ownerId": 20,
+    "name": "Utolsó Bástya",
+    "gameId": 2,
+    "description": "A legkésőbb alakult, de legaktívabb szövetség.",
+    "createdAt": "2026-03-14T22:00:00+01:00",
+    "updatedAt": "2026-03-14T22:00:00+01:00"
+  }
+]

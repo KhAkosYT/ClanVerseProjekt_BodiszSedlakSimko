@@ -24,14 +24,6 @@ async function seedClanMembers() {
                     updatedAt: memberInfo.updatedAt
                 }
             });
-
-            if (!created) {
-                await member.update({
-                    role: memberInfo.role,
-                    createdAt: memberInfo.createdAt,
-                    updatedAt: memberInfo.updatedAt
-                });
-            }
         }
 
         console.log(`Sikeres feltöltés! (${clanMembersList.length} klántag)`);

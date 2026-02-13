@@ -29,17 +29,6 @@ async function seedUsers() {
                     updatedAt: userInfo.updatedAt
                 }
             });
-
-            if (!created) {
-                await user.update({
-                    email: userInfo.email,
-                    password: await bcrypt.hash(userInfo.password, config.hashIterations),
-                    isAdmin: userInfo.isAdmin || false,
-                    profilePicture: userInfo.profilePicture,
-                    createdAt: userInfo.createdAt,
-                    updatedAt: userInfo.updatedAt
-                });
-            }
         }
 
         console.log(`Sikeres feltöltés! (${usersList.length} felhasználó)`);

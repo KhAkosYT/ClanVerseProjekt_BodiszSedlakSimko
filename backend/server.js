@@ -286,7 +286,7 @@ app.delete('/api/clans/:id', auth, async (req, res, next) => {
             return Code404("Nincs ilyen klán", req, res, next);
         }
 
-        const isLeader = await ClanMembers.findOne({ where: { userId: userId, role: "Leader" }});
+        const isLeader = await ClanMembers.findOne({ where: { userId: userId, role: "leader" }});
 
         if(!isLeader){
             return Code403("Nincs jogosultságod a klán törléséhez", req, res, next);
@@ -314,7 +314,7 @@ app.put('/api/clans/:id', auth, async (req, res, next) => {
             return Code404("Nincs ilyen klán", req, res, next);
         }
 
-        const isLeader = await ClanMembers.findOne({ where: { userId: userId, clanId: id, role: "Leader" }});
+        const isLeader = await ClanMembers.findOne({ where: { userId: userId, clanId: id, role: "leader" }});
 
         if(!isLeader){
             return Code403("Nincs jogosultságod a klán módosításához", req, res, next);
@@ -407,34 +407,37 @@ app.post('/api/clans/:id/leave', auth, async (req, res, next) => {
     }
 });
 
-app.post('/api/clans/:id/kick/:memberUserId', auth, async (req, res, next) => {
+app.post('/api/clans/:id/kick/:memberUserName', auth, async (req, res, next) => {
     try {
         const { userId } = req.user;
-        const { id, memberUserId } = req.params;
+        const { id, memberUserName } = req.params;
 
         const clan = await Clans.findByPk(id);
-        if (!clan) {
-            return Code404("Nincs ilyen klán", req, res, next);
+        if(!clan){
+            return Code404("Nem található ilyen klán", req, res, next);
         }
 
-        const isLeader = await ClanMembers.findOne({ where: { userId: userId, clanId: id, role: "Leader" }});
-        if (!isLeader) {
-            return Code403("Nincs jogosultságod a klán tagjainak kirúgásához", req, res, next);
+        const isLeader = await ClanMembers.findOne({ where: { clanId: id, userId: userId, role: 'leader'}});
+        if(!isLeader){
+            return Code401("Nincs jogosultságod a tagok kirúgásához", req, res, next);
         }
 
-        const memberToKick = await ClanMembers.findOne({ where: { clanId: id, userId: targetUserId }});
-        if (!memberToKick) {
-            return Code404("A megadott felhasználó nem tagja a klánnak", req, res, next);
+        const user = await Users.findOne({ where: { username: memberUserName } });
+        if(!user){
+            return Code404("Nem található a felhasználó", req, res, next);
+        }
+        
+        const member = await ClanMembers.findOne({ where: { clanId: id, userId: user.id}});
+        if(!member){
+            return Code404("Az adott felhasználó nem tagja a klánnak.");
         }
 
-        if (memberToKick.role === 'leader') {
-            return Code403("Nem tudod kirúgni a klán vezetőjét", req, res, next);
-        }
+        await member.destroy();
+        
+        res.status(200).json({ message: `Sikeresen kirúgtad ${memberUserName} nevű játékost!` });
 
-        await memberToKick.destroy();
-        res.status(200).json({ message: "Sikeresen kirúgtad a tagot a klánból" });
     } catch (err) {
-        console.error("Hiba történt a klán tagjainak kirúgása során", err);
+        console.log("Hiba a kirúgás során", err);
         return Code500(err, req, res, next);
     }
 });
@@ -593,6 +596,11 @@ app.get('/api/famous-clans', async (req, res, next) => {
         console.error("Hiba történt a híres klánok lekérdezése során", err);
         return Code500(err, req, res, next);
     }
+});
+
+app.get('/api/admin/is-admin', auth, async (req, res, next) => {
+    const { userId, isAdmin } = req.user;
+    res.status(200).json({ isAdmin });
 });
 
 

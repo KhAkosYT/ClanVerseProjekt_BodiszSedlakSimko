@@ -9,7 +9,7 @@ async function seedClans() {
         const clansList = JSON.parse(fileContent);
 
         const count = await Clans.count();
-        if (count === clansList.length) {
+        if (count >= clansList.length) {
             return;
         }
 

@@ -9,7 +9,7 @@ async function seedMessages() {
         const messagesList = JSON.parse(fileContent);
 
         const count = await Message.count();
-        if (count === messagesList.length) {
+        if (count >= messagesList.length) {
             return;
         }
 

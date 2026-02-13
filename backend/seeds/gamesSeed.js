@@ -9,7 +9,7 @@ async function seedGames() {
         const gamesList = JSON.parse(fileContent);
 
         const count = await Games.count();
-        if (count === gamesList.length) {
+        if (count >= gamesList.length) {
             return;
         }
 

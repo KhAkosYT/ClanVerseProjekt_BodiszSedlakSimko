@@ -11,7 +11,7 @@ async function seedUsers() {
         const usersList = JSON.parse(fileContent);
 
         const count = await Users.count();
-        if (count === usersList.length) {
+        if (count >= usersList.length) {
             return;
         }
 

@@ -29,6 +29,7 @@ export class Clans implements OnInit {
   editGameSuggestions: any[] = [];
   editingClanId: string | null = null;
   clanData: any = null;
+  isKickMode: boolean = false;
 
   constructor(private http: HttpClient, private router: Router) {
     console.log('Clans component constructor called');
@@ -95,6 +96,7 @@ export class Clans implements OnInit {
             editable: responseData.editable,
             canJoin: responseData.canJoin
           };
+          this.isKickMode = false; 
         },
         error: (err) => {
           console.error('Hiba a klán részletek lekérésekor:', err);
@@ -102,6 +104,11 @@ export class Clans implements OnInit {
         }
       });
     }
+  }
+
+  closeClanDetails(): void {
+    this.clanData = null;
+    this.isKickMode = false;
   }
 
   openEditModal(clan: any) {
@@ -144,6 +151,34 @@ export class Clans implements OnInit {
     }
 
     console.log('Klán törlése:', clanId);
+  }
+
+  openKickPlayer(clan: any) : void {
+    this.isKickMode = !this.isKickMode;
+  }
+
+  kickMember(memberName: string, clanId: string): void {
+    if(!memberName || !clanId) return;
+    
+    if(this.token){
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${this.token}`
+      });
+
+      this.http.post(`http://localhost:3000/api/clans/${clanId}/kick/${memberName}`, {}, {headers}).subscribe({
+        next: ( response: any ) => {
+          alert(`Sikeresen kirúgtad ${memberName} nevű játékost!`);
+          window.location.reload();
+        },
+        error: (error) => {
+          alert("Hiba");
+        }
+      })
+    }
+
+
+    
+
   }
 
   leaveClan(clanId: string): void {

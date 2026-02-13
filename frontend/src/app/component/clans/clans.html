@@ -6,8 +6,10 @@
 <div class="clans-container">
   
 </div>
-<div class="clan-details-container">
-  <div *ngIf="clanData" class="card-body">
+<div *ngIf="clanData" class="modal-overlay">
+  <div class="modal-content clan-details-container" style="position: relative; max-height: 90vh; overflow-y: auto;">
+    <span (click)="closeClanDetails()" style="position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+    <div class="clan-card-body">
     <h5 class="card-title">{{ clanData.name }}</h5>
     <h6 class="card-subtitle mb-2 text-body-secondary" style="color: #00f3ff !important;">{{ clanData.gameName }}</h6>
     <p class="card-text">{{ clanData.description }}</p>
@@ -17,12 +19,17 @@
           <tr>
             <th>Név</th>
             <th>Szerep</th>
+            <th *ngIf="isKickMode">Művelet</th>
           </tr>
         </thead>
-        <tbody>
-          <tr *ngFor="let member of clanData.allMembers">
+        <tbody >
+          <tr *ngFor="let member of clanData.allMembers" class="members-table-row">
             <td>{{ member.name }}</td>
             <td>{{ member.role }}</td>
+            <td *ngIf="isKickMode">
+              <button *ngIf="member.role !== 'leader'" (click)="kickMember(member.name, clanData.id)">Kirúgás</button>
+              <div *ngIf="member.role === 'leader'" style="color: gray; text-align: center !important;">Nem rúgható ki</div>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -31,6 +38,7 @@
       <ng-container *ngIf="clanData.editable">
         <button (click)="openEditModal(clanData)">Klán módosítása</button>
         <button (click)="deleteClan(clanData.id)">Klán törlése</button>
+        <button (click)="openKickPlayer(clanData)">{{ isKickMode ? 'Kizárás befejezése' : 'Játékos kizárása' }}</button>
         <button (click)="leaveClan(clanData.id)">Kilépés a klánból</button>
         <button (click)="openMessage(clanData.id)">Chat megnyitása</button>
       </ng-container>
@@ -43,6 +51,7 @@
       <ng-container *ngIf="!clanData.editable && clanData.canJoin === true">
         <button (click)="onJoin(clanData.id)">Belépés a klánba</button>
       </ng-container>
+    </div>
     </div>
   </div>
 </div>

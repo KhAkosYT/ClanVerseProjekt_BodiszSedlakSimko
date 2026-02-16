@@ -54,5 +54,11 @@ export const routes: Routes = [
       .then(mod => mod.Profile);
     }
    },
+   { path: 'admin',
+    loadComponent() {
+      return import('./component/admin/admin')
+      .then(mod => mod.Admin);
+    }
+   },
    
 ];

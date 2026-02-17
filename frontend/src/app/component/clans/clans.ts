@@ -3,6 +3,8 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { GameService } from '../../services/game.service';
+import { ClanService } from '../../services/clan.service';
 
 interface Member {
   name: string;
@@ -18,6 +20,9 @@ interface Member {
 })
 
 export class Clans implements OnInit {
+
+  constructor(private clanService: ClanService, private gameService: GameService, private router: Router) {}
+
   private token = localStorage.getItem('token');
   error: string | null = null;
   games: any[] = [];
@@ -31,9 +36,6 @@ export class Clans implements OnInit {
   clanData: any = null;
   isKickMode: boolean = false;
 
-  constructor(private http: HttpClient, private router: Router) {
-    console.log('Clans component constructor called');
-  }
 
   ngOnInit(): void {
     if (this.token) {
@@ -41,7 +43,7 @@ export class Clans implements OnInit {
         'Authorization': `Bearer ${this.token}`  
       });
 
-      this.http.get('http://localhost:3000/api/clans', { headers }).subscribe({
+      this.clanService.getClans().subscribe({
         next: (datas) => {
           const clansData = datas as any[];
           //console.log('Clans data received:', datas);
@@ -84,11 +86,8 @@ export class Clans implements OnInit {
   fetchClanDetails(clanId: string): void {
     
     if (this.token) {
-      const headers = new HttpHeaders({
-        'Authorization': `Bearer ${this.token}`  
-      });
     
-      this.http.get(`http://localhost:3000/api/clans/${clanId}`, { headers }).subscribe({
+      this.clanService.getClan(clanId, this.token).subscribe({
         next: (data) => {
           const responseData = data as any;
           this.clanData = {
@@ -123,7 +122,7 @@ export class Clans implements OnInit {
   }
 
   fetchGames() {
-    this.http.get('http://localhost:3000/api/games').subscribe({
+    this.gameService.getGames().subscribe({
       next: (data: any) => {
         this.games = data.games || [];
         this.editGameSuggestions = this.games;
@@ -136,11 +135,7 @@ export class Clans implements OnInit {
 
   deleteClan(clanId: string): void {
     if(this.token) {
-      const headers = new HttpHeaders({
-        'Authorization': `Bearer ${this.token}`
-      });
-
-      this.http.delete(`http://localhost:3000/api/clans/${clanId}`, { headers }).subscribe({
+      this.clanService.deleteClan(clanId, this.token).subscribe({
         next: (response: any) => {
           console.log(response.message);
           window.location.reload();
@@ -161,11 +156,7 @@ export class Clans implements OnInit {
     if(!memberName || !clanId) return;
     
     if(this.token){
-      const headers = new HttpHeaders({
-        'Authorization': `Bearer ${this.token}`
-      });
-
-      this.http.post(`http://localhost:3000/api/clans/${clanId}/kick/${memberName}`, {}, {headers}).subscribe({
+      this.clanService.kickMember(clanId, memberName, this.token).subscribe({
         next: ( response: any ) => {
           alert(`Sikeresen kirúgtad ${memberName} nevű játékost!`);
           window.location.reload();
@@ -175,19 +166,11 @@ export class Clans implements OnInit {
         }
       })
     }
-
-
-    
-
   }
 
   leaveClan(clanId: string): void {
     if(this.token) {
-      const headers = new HttpHeaders ({
-        'Authorization': `Bearer ${this.token}`
-      });
-
-      this.http.post(`http://localhost:3000/api/clans/${clanId}/leave`, {}, { headers }).subscribe({
+      this.clanService.leaveClan(clanId, this.token).subscribe({
         next: (response: any) =>  {
           console.log(response.message);
           window.location.reload();
@@ -195,18 +178,12 @@ export class Clans implements OnInit {
         error: (error) => {console.error("Hiba a klán kilépésekor.")}
       });
     }
-
     console.log('Kilépés a klánból:', clanId);
   }
 
   onJoin(clanid: string): void{
     if(this.token) {
-      const headers = new HttpHeaders ({
-        'Authorization': `Bearer ${this.token}`
-      });
-
-
-      this.http.post(`http://localhost:3000/api/clans/${clanid}/join`, {}, { headers }).subscribe({
+      this.clanService.joinClan(clanid, this.token).subscribe({
         next: (response: any) => {
           console.log(response.message);
           window.location.reload(); 
@@ -226,31 +203,13 @@ export class Clans implements OnInit {
       this.editGameId = null;
       return;
     }
-    this.http.get(`http://localhost:3000/api/games?search=${encodeURIComponent(value)}`).subscribe({
+    this.gameService.getGames(value).subscribe({
       next: (data: any) => {
         this.editGameSuggestions = Array.isArray(data.games) ? data.games : [];
       },
       error: (err) => {
         this.editGameSuggestions = [];
         console.error('Hiba a játékok szűrésekor:', err);
-      }
-    });
-  }
-
-  onEditGameChange(event: any) {
-    const value = event.target.value.trim();
-    if (!value) {
-      this.editGameSuggestions = [];
-      this.editGameId = null;
-      return;
-    }
-    this.http.get(`http://localhost:3000/api/games?search=${encodeURIComponent(value)}`).subscribe({
-      next: (data: any) => {
-        this.editGameSuggestions = Array.isArray(data.games) ? data.games : [];
-      },
-      error: (err) => {
-        this.editGameSuggestions = [];
-        console.error('Hiba a játékok szűrésekor (change event):', err);
       }
     });
   }
@@ -283,16 +242,13 @@ export class Clans implements OnInit {
       return;
     }
     if (this.token) {
-      const headers = new HttpHeaders({
-        'Authorization': `Bearer ${this.token}`
-      });
       const updateData = {
         newClanName: this.editClanName,
         newClanGame: this.editGameId,
         newClanDescription: this.editDescription
       };
 
-      this.http.put(`http://localhost:3000/api/clans/${this.editingClanId}`, updateData, { headers }).subscribe({
+      this.clanService.updateClan(this.editingClanId || '', updateData, this.token).subscribe({
         next: (response: any) => {
           this.closeEditModal();
           window.location.reload();

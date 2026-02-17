@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { RouterLink, Router } from '@angular/router';
+import { UserService } from '../../services/user.service'; 
 
 @Component({
   selector: 'app-registration',
@@ -17,7 +17,7 @@ export class Registration {
   confirmPassword: string = '';
   profilePicture: File | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private userService: UserService, private router: Router) {}
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -38,10 +38,10 @@ export class Registration {
     if (this.profilePicture) {
       formData.append('profilePicture', this.profilePicture, this.profilePicture.name);
     }
-    this.http.post('http://localhost:3000/api/users/register', formData).subscribe({
+    this.userService.register(formData).subscribe({
       next: (response: any) => {
         console.log('Sikeres regisztráció:', response);
-        window.location.href = '/login';
+        this.router.navigate(['/login']);
       },
       error: (error) => {
         console.error('Hiba a regisztrációnál:', error);

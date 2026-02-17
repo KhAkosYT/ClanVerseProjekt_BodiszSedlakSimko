@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from "@angular/router";
+import { RouterLink, Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ClanService } from '../../services/clan.service'; 
+import { GameService } from '../../services/game.service';
 
 @Component({
   selector: 'app-createclan',
@@ -13,23 +14,21 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 export class Createclan implements OnInit {
    clanname: string = "";
-   gameId: number | null = null;
+   gameId: string | null = null;
    gameName: string = "";
    description: string = "";
    showModal: boolean = false;
    games: any[] = [];
    gameSuggestions: any[] = [];
 
-  constructor(private http: HttpClient) {}
-
-  private token = localStorage.getItem('token');
+  constructor(private clanService: ClanService, private gameService: GameService, private router: Router) {}
 
   ngOnInit(): void {
     this.fetchGames();
   }
 
   fetchGames() {
-    this.http.get('http://localhost:3000/api/games').subscribe({
+    this.gameService.getGames().subscribe({
       next: (data: any) => {
         this.games = data.games || [];
         this.gameSuggestions = [...this.games];
@@ -47,7 +46,7 @@ export class Createclan implements OnInit {
       this.gameId = null;
       return;
     }
-    this.http.get(`http://localhost:3000/api/games?search=${encodeURIComponent(value)}`).subscribe({
+    this.gameService.getGames(value).subscribe({
       next: (data: any) => {
         this.gameSuggestions = Array.isArray(data.games) ? data.games : [];
       },
@@ -69,20 +68,26 @@ export class Createclan implements OnInit {
   }
 
   goToLogin() {
-    window.location.href = '/login';
+    this.router.navigate(['/login']);
   }
 
   onSubmit() {
-    if(!this.token){
+    const token = localStorage.getItem('token');
+    if(!token){
       this.showModal = true;
       return;
     }
-    const createclanData = {clanName : this.clanname, gameId: this.gameId, description: this.description}
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
 
-    this.http.post('http://localhost:3000/api/clans', createclanData, { headers }).subscribe({
+    if(!this.clanname || this.gameId === null){
+      alert("Kérlek töltsd ki a klán nevét és válassz egy játékot!")
+      return;
+    }
+
+    const createclanData = {clanName : this.clanname, gameId: this.gameId, description: this.description}
+
+    this.clanService.createClan(createclanData, token).subscribe({
       next: (response: any) => {
-        window.location.href = '/clans';
+        this.router.navigate(['/clans']);
       },
       error: (error) => {
         console.error('Hiba a klán létrehozásánál:', error);
@@ -91,5 +96,3 @@ export class Createclan implements OnInit {
   }
 
 }
-
-

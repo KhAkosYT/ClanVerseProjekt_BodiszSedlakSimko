@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { RouterLink, Router } from '@angular/router';
+import { UserService } from '../../services/user.service';  
 
 @Component({
   selector: 'app-login',
@@ -14,16 +14,17 @@ export class Login {
   username: string = '';
   password: string = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private userService: UserService, private router: Router) {}
+
 
   onSubmit() {
     const loginData = { username: this.username, password: this.password };
-    this.http.post('http://localhost:3000/api/users/login', loginData).subscribe({
+    this.userService.login(loginData).subscribe({
       next: (response: any) => {
         console.log('Sikeres bejelentkezés:', response);
         
         localStorage.setItem('token', response.token);
-        window.location.href = '/dashboard';
+        this.router.navigate(['/fooldal']);
       },
       error: (error) => {
         console.error('Hiba a bejelentkezéskor:', error);

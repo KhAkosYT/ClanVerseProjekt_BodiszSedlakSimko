@@ -66,7 +66,7 @@
       </div>
       <div>
         <label for="editGame">Játék</label>
-        <input type="text" id="editGame" name="editGame" [(ngModel)]="editGameName" (input)="onEditGameInput($event)" (change)="onEditGameChange($event)" required autocomplete="off">
+        <input type="text" id="editGame" name="editGame" [(ngModel)]="editGameName" (input)="onEditGameInput($event)"  required autocomplete="off">
         <input type="hidden" id="editGameId" name="editGameId" [(ngModel)]="editGameId">
         <ul *ngIf="editGameSuggestions.length > 0" id="edit-game-suggestions" class="game-suggestions">
           <li *ngFor="let game of editGameSuggestions" (mousedown)="selectEditGame(game)">{{ game.name }}</li>

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'app-admin',
@@ -16,7 +17,7 @@ export class Admin implements OnInit {
   isLoading: boolean = false;
 
 
-  constructor(private http: HttpClient) {}
+  constructor(private adminService: AdminService) {}
 
   ngOnInit(): void {
     this.isAdmin();
@@ -29,11 +30,7 @@ export class Admin implements OnInit {
       return;
     }
 
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-
-    this.http.get('http://localhost:3000/api/admin/is-admin', { headers }).subscribe({
+    this.adminService.getIsAdmin(token).subscribe({
       next: (response) => {
         const isAdmin = (response as any).isAdmin;
         if (!isAdmin) {
@@ -66,18 +63,14 @@ export class Admin implements OnInit {
     }
 
     this.isLoading = true;
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-
-    const formData = new FormData();
+        const formData = new FormData();
     formData.append('gameName', this.gameName);
     
     if (this.selectedFile) {
       formData.append('gameLogo', this.selectedFile);
     }
 
-    this.http.post('http://localhost:3000/api/admin/upload-game', formData, { headers }).subscribe({
+    this.adminService.createGame(formData, token).subscribe({
       next: (response: any) => {
         this.isLoading = false;
         alert(response.message || "Játék sikeresen hozzáadva.");

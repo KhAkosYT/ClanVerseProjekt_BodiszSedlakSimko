@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { UserService } from '../../services/user.service';  
@@ -10,12 +10,18 @@ import { UserService } from '../../services/user.service';
   styleUrl: './login.css'
 })
 
-export class Login {
+export class Login implements OnInit{
   username: string = '';
   password: string = '';
 
   constructor(private userService: UserService, private router: Router) {}
 
+  ngOnInit(): void {
+    const token = localStorage.getItem('token');
+    if(token){
+      this.router.navigate(['/fooldal']);
+    }
+  }
 
   onSubmit() {
     const loginData = { username: this.username, password: this.password };
@@ -24,7 +30,7 @@ export class Login {
         console.log('Sikeres bejelentkezés:', response);
         
         localStorage.setItem('token', response.token);
-        this.router.navigate(['/fooldal']);
+        window.location.reload()
       },
       error: (error) => {
         console.error('Hiba a bejelentkezéskor:', error);

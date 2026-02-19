@@ -47,6 +47,8 @@ export class ClanService {
     return this.http.post(`${this.apiUrl}/clans/${clanId}/kick/${memberName}`, {}, { headers: { 'Authorization': `Bearer ${token}` } });
   }
 
-
-  // Ide jön Lóri népszerű klánok kérése
+  getFamousClans(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/famous-clans`);
+  }
+  
 }

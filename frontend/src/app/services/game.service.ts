@@ -23,5 +23,7 @@ export class GameService {
         return this.http.post(`${this.apiUrl}/admin/upload-game`, gameData);
     }
 
-    // Ide jön Lóri népszerű játékok kérése
+    getFamousGames(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/famous-games`);
+    }
 }

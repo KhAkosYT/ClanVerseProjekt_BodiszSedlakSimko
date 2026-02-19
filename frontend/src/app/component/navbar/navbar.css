@@ -1,6 +1,40 @@
 nav{
     background-color: transparent !important;
     font-weight:  600;
-    border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+    border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
     color: #FFFFFF !important;
+}
+
+.nav-link.active, .dropdown-item.active {
+    color: #00f3ff !important;
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.8);
+}
+
+.dropdown-menu {
+    background-color: rgba(15, 23, 36, 0.95) !important;
+    border: 1px solid rgba(0, 243, 255, 0.1);
+    right: 0 !important;
+    left: auto !important;
+    margin-right: 15px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.dropdown-item {
+    color: #FFFFFF !important;
+    border-radius: 5px;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(0, 243, 255, 0.1);
+    color: #E0F7FA !important;
+}
+
+.dropdown-menu li {
+    margin-bottom: 10px;
+}
+
+.dropdown-menu li:last-child {
+    margin-bottom: 0;
 }

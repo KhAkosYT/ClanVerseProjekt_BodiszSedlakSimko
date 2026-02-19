@@ -1,0 +1,141 @@
+.welcome-header {
+    text-align: center;
+    padding: 40px 20px;
+    margin: 20px auto;
+    max-width: calc(100% - 120px);
+    box-sizing: border-box;
+    border-radius: 0;
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.5), 0 0 20px rgba(0, 243, 255, 0.3), 0 0 30px rgba(0, 243, 255, 0.2);
+    animation: neonFlash 1.2s ease-in-out infinite alternate;
+}
+
+.welcome-header h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #E0F7FA;
+    background: linear-gradient(45deg, #4169E1, #0D3B66);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+    margin: 0 0 20px 0;
+}
+
+.welcome-subtitle {
+    font-size: 1.2rem;
+    color: #B0E0E6;
+    margin: 10px 0;
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+    line-height: 1.6;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.welcome-subtitle.call-to-action {
+    font-weight: bold;
+    margin-top: 20px;
+    color: #E0F7FA;
+    font-size: 1.3rem;
+}
+
+.nepszeru-div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.nepszeru-jatekok, .nepszeru-klanok {
+    background-color: #0d1a26;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+    color: #E0F7FA;
+}
+
+.nepszeru-jatekok h2, .nepszeru-klanok h2 {
+    text-align: center;
+    color: #00f3ff;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #00f3ff;
+    padding-bottom: 10px;
+}
+
+.game-item, .clan-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 20px;
+    background-color: #1a2c3a;
+    border-radius: 5px;
+    text-align: center;
+    transition: transform 0.4s ease-in-out;
+    min-height: 150px;
+}
+
+.game-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    transition: transform 0.4s ease-in-out;
+}
+
+.clan-item h4 img {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+.game-item p, .clan-item p, .clan-item h4 {
+    margin: 5px 0;
+}
+
+.clan-item h2 {
+    margin: 5px 0;
+    transition: transform 0.4s ease-in-out;
+}
+
+.game-item .game-item-details,
+.clan-item .clan-item-details {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out;
+}
+
+.game-item:hover .game-item-details,
+.clan-item:hover .clan-item-details {
+    max-height: 100px;
+    opacity: 1;
+}
+
+.game-item:hover,
+.clan-item:hover {
+    transform: scale(1.05);
+}
+
+.game-item:hover img {
+    transform: scale(1.5);
+}
+
+.clan-item:hover h2 {
+    transform: scale(1.2);
+}
+
+@media (max-width: 768px) {
+    .nepszeru-div {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome-header {
+        max-width: calc(100% - 40px);
+    }
+}

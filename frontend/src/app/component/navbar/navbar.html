@@ -1,25 +1,37 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" routerLink="#">ClanVerse</a>
+    <a class="navbar-brand" routerLink="/">ClanVerse</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav" id="navbar-ul">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" routerLink="/fooldal">Főoldal</a>
+          <a class="nav-link" routerLink="/" [class.active]="isHomeActive()">Főoldal</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/registration">Regisztráció</a>
+          <a class="nav-link" routerLink="/clans" routerLinkActive="active">Klánok</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/login">Login</a>
+          <a class="nav-link" routerLink="/createclan" routerLinkActive="active">Klán létrehozása</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/clans">Clans</a>
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item" *ngIf="!isLoggedIn">
+          <a class="nav-link" routerLink="/login" routerLinkActive="active">Bejelentkezés</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/createclan">Create Clan</a>
+        <li class="nav-item" *ngIf="!isLoggedIn">
+          <a class="nav-link" routerLink="/registration" routerLinkActive="active">Regisztráció</a>
+        </li>
+        <li class="nav-item dropdown" *ngIf="isLoggedIn">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" [class.active]="isProfileActive()">
+            Profil
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" routerLink="/profile" routerLinkActive="active">Profilom</a></li>
+            <li *ngIf="isAdmin"><a class="dropdown-item" routerLink="/admin" routerLinkActive="active">Admin felület</a></li>
+            <li><a class="dropdown-item" style="cursor: pointer;" (click)="logout()">Kijelentkezés</a></li>
+          </ul>
         </li>
       </ul>
     </div>

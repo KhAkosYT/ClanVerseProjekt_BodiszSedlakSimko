@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { GameService } from '../../services/game.service';
 import { ClanService } from '../../services/clan.service';
 import { UserService } from '../../services/user.service';
+import { environment } from '../../environments/environment';
+
 
 interface Member {
   name: string;
@@ -24,6 +26,7 @@ export class Clans implements OnInit {
 
   constructor(private clanService: ClanService, private gameService: GameService, private router: Router, private userService: UserService) {}
 
+  protected serverUploadUrl = environment.serverUploadUrl;
   private token = localStorage.getItem('token');
   error: string | null = null;
   games: any[] = [];

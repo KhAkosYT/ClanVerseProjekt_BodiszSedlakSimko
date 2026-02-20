@@ -1,6 +1,5 @@
 <div class="welcome-header">
-  <h1>Üdvözöljük a klánok oldalán!</h1>
-  <p class="welcome-subtitle">Egy hely, ahol a játékosok találkoznak, csapatok születnek, és közös célok formálódnak.<br>A klánok nemcsak a győzelemről szólnak, hanem a fejlődésről, az együttműködésről és az élményekről.</p>
+  <h1>Üdvözöljük a Klánok oldalán!</h1>
   <p class="welcome-subtitle call-to-action">Csatlakozz egy klánhoz, vagy hozz létre saját közösséget, és alakítsd te a játék jövőjét.</p>
 </div>
 <div class="clans-container">
@@ -12,6 +11,7 @@
     <div class="clan-card-body">
     <h5 class="card-title">{{ clanData.name }}</h5>
     <h6 class="card-subtitle mb-2 text-body-secondary" style="color: #00f3ff !important;">{{ clanData.gameName }}</h6>
+    <img src="{{this.serverUploadUrl + clanData.gameLogo }}" alt="{{ clanData.gameName }}" class="card-img-top">
     <p class="card-text">{{ clanData.description }}</p>
       <h3>Tagok</h3>
       <table class="members-table">

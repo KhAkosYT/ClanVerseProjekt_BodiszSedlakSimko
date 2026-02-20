@@ -101,7 +101,8 @@ exports.getClanById = async (req, res, next) => {
         const clanData = {
             id: clan.id,
             name: clan.name,
-            gameName: clanGameName ? clanGameName.gameName : null,
+            gameName: clanGameName.gameName,
+            gameLogo: clanGameName.logo,
             description: clan.description,
             allMembers: Object.values(allClanMembers),
         };

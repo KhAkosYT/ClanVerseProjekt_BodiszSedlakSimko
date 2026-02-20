@@ -90,3 +90,27 @@ button:hover {
   transform: translateY(-2px);
   box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
 }
+input[type="file"] {
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+input[type="file"]::-webkit-file-upload-button,
+input[type="file"]::file-selector-button {
+  padding: 15px;
+  background: linear-gradient(135deg, #00f3ff 0%, #0066ff 100%);
+  border: none;
+  color: #000;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+  font-size: 0.9rem;
+}
+
+input[type="file"]::-webkit-file-upload-button:hover,
+input[type="file"]::file-selector-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
+}

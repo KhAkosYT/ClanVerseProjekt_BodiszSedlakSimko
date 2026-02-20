@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GameService } from '../../services/game.service';
 import { ClanService } from '../../services/clan.service';
+import { UserService } from '../../services/user.service';
 
 interface Member {
   name: string;
@@ -21,7 +22,7 @@ interface Member {
 
 export class Clans implements OnInit {
 
-  constructor(private clanService: ClanService, private gameService: GameService, private router: Router) {}
+  constructor(private clanService: ClanService, private gameService: GameService, private router: Router, private userService: UserService) {}
 
   private token = localStorage.getItem('token');
   error: string | null = null;
@@ -38,11 +39,6 @@ export class Clans implements OnInit {
 
 
   ngOnInit(): void {
-    if (this.token) {
-      const headers = new HttpHeaders({
-        'Authorization': `Bearer ${this.token}`  
-      });
-
       this.clanService.getClans().subscribe({
         next: (datas) => {
           const clansData = datas as any[];
@@ -77,16 +73,11 @@ export class Clans implements OnInit {
           console.error('Hiba:', err);  
         }
       });
-    } else {
-      this.error = 'Nincs token a localStorage-ban.';
-    }
   }
 
 
   fetchClanDetails(clanId: string): void {
-    
     if (this.token) {
-    
       this.clanService.getClan(clanId, this.token).subscribe({
         next: (data) => {
           const responseData = data as any;
@@ -102,6 +93,8 @@ export class Clans implements OnInit {
           this.clanData = null;
         }
       });
+    } else {
+      this.userService.triggerAuthError();
     }
   }
 

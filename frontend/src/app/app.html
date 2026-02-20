@@ -3,3 +3,13 @@
   <router-outlet></router-outlet>
 </div>
 <app-footer></app-footer>
+
+@if (userService.showAuthModal()) {
+  <div class="auth-modal-backdrop">
+    <div class="auth-modal-content">
+      <h2>Bejelentkezés szükséges!</h2>
+      <p>Kérjük, jelentkezz be a funkciók eléréséhez!</p>
+      <button routerLink="/login" (click)="userService.showAuthModal.set(false)">Ugrás a bejelentkezéshez</button>
+    </div>
+  </div>
+}

@@ -5,7 +5,7 @@ const Users = require('../models/users');
 
 const { Code400, Code401, Code403, Code404, Code409, Code500 } = require('../utils/statusCode'); 
 
-const auth = require('../middleware/auth');
+const { Op } = require('sequelize');
 
 exports.createClan = async (req, res, next) => {
     const { clanName, gameId, description } = req.body;

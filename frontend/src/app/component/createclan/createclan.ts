@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { CommonModule } from '@angular/common';
 import { ClanService } from '../../services/clan.service'; 
 import { GameService } from '../../services/game.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-createclan',
@@ -17,13 +18,17 @@ export class Createclan implements OnInit {
    gameId: string | null = null;
    gameName: string = "";
    description: string = "";
-   showModal: boolean = false;
    games: any[] = [];
    gameSuggestions: any[] = [];
 
-  constructor(private clanService: ClanService, private gameService: GameService, private router: Router) {}
+  constructor(private clanService: ClanService, private gameService: GameService, private router: Router, private userService: UserService) {}
 
   ngOnInit(): void {
+    const token = localStorage.getItem('token');
+    if(!token){
+      this.userService.triggerAuthError();
+      return;
+    }
     this.fetchGames();
   }
 
@@ -67,14 +72,10 @@ export class Createclan implements OnInit {
     this.gameSuggestions = this.games;
   }
 
-  goToLogin() {
-    this.router.navigate(['/login']);
-  }
-
   onSubmit() {
     const token = localStorage.getItem('token');
     if(!token){
-      this.showModal = true;
+      this.userService.triggerAuthError();
       return;
     }
 
@@ -90,6 +91,11 @@ export class Createclan implements OnInit {
         this.router.navigate(['/clans']);
       },
       error: (error) => {
+        if (error.status === 409) {
+          alert(error.error?.reason || "Már létezik ilyen néven klán.");
+        } else {
+          alert(error.error?.message || "Hiba történt a klán létrehozásánál.");
+        }
         console.error('Hiba a klán létrehozásánál:', error);
       }
     });

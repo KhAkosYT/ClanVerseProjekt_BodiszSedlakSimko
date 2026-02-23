@@ -9,23 +9,18 @@ export const routes: Routes = [
       .then(mod => mod.Fooldal);
     }
   },
+
   { path: 'registration',
     loadComponent() {
       return import('./component/registration/registration')
       .then(mod => mod.Registration);
     },
   },
+
   { path: 'login',
     loadComponent() {
       return import('./component/login/login')
       .then(mod => mod.Login);
-    }
-  },
-
-  { path: 'dashboard',
-    loadComponent() {
-      return import('./component/dashboard/dashboard')
-      .then(mod => mod.Dashboard);
     }
   },
 
@@ -42,18 +37,21 @@ export const routes: Routes = [
       .then(mod => mod.Createclan);
     }
    },
+
    { path: 'message/:clanId',
     loadComponent() {
       return import('./component/message/message')
       .then(mod => mod.Messages);
     }
    },
+
    { path: 'profile',
     loadComponent() {
       return import('./component/profile/profile')
       .then(mod => mod.Profile);
     }
    },
+   
    { path: 'admin',
     loadComponent() {
       return import('./component/admin/admin')

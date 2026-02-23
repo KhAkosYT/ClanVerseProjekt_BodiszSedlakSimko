@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
-import { UserService } from '../../services/user.service'; 
+import { UserService } from '../../services/user.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-registration',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, CommonModule],
   templateUrl: './registration.html',
   styleUrl: './registration.css'
 })
@@ -16,6 +17,7 @@ export class Registration {
   password: string = '';
   confirmPassword: string = '';
   profilePicture: File | null = null;
+  errorMessage: string = '';
 
   constructor(private userService: UserService, private router: Router) {}
 
@@ -27,8 +29,9 @@ export class Registration {
   }
 
   onSubmit() {
+    this.errorMessage = '';
     if (this.password !== this.confirmPassword) {
-      alert('A jelszavak nem egyeznek');
+      this.errorMessage = 'A jelszavak nem egyeznek!';
       return;
     }
     const formData = new FormData();
@@ -45,7 +48,7 @@ export class Registration {
       },
       error: (error) => {
         console.error('Hiba a regisztrációnál:', error);
-        alert('Hiba a regisztrációnál: ' + (error.error.reason || error.message));
+        this.errorMessage = error.error.reason || error.error.message || 'Hiba történt a regisztráció során.';
       }
     });
   }

@@ -1,5 +1,8 @@
 <form (ngSubmit)="onSubmit()" #registrationForm="ngForm" class="form-container">
   <h2>Regisztráció</h2>
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
   <div class="form-group">
     <label for="username">Felhasználónév</label>
     <input type="text" id="username" name="username" [(ngModel)]= "username" required  placeholder="Add meg a felhasználóneved"/>

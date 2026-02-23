@@ -11,6 +11,7 @@
 
 > [!IMPORTANT]
 > **Megjegyzés:**
->  2025. okt. 18-ai commitnál látható egy "merge to main": a Github Desktop valamiért hisztizett amiért elfelejtettem a local commit-et feltölteni a repoba, és Lóri teszt commitját hogy pulloltam összeakadhatott vagy nem is tudom.
-> 2025.11.05: a commitnál a "merge to main" megint hisztizett, amikor én még dolgozok valamin, de a többiek raknak fel valamit, akkor mindig ez történik
+>  2025. okt. 18-ai commitnál látható egy "merge to main": a Github Desktop valamiért hisztizett amiért elfelejtettem a local commit-et feltölteni a repoba, és Lóri teszt commitját hogy pulloltam összeakadhatott vagy nem is tudom. <br/>
+> 2025.11.05: a commitnál a "merge to main" megint hisztizett, amikor én még dolgozok valamin, de a többiek raknak fel valamit, akkor mindig ez történik <br/>
+> 2026.02.23: Suliban órán dolgoztunk, és a commitom előtt elfelejtettem fetch-elni a GitHub Desktopban, ezért van egy "merge to main" commitom, ahol azok a változások láthatóak, amiket Lóri töltött fel most órán. <br/>
 

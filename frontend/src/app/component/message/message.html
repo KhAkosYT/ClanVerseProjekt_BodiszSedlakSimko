@@ -1,4 +1,3 @@
-
 <div class="chat-container">
     <div class="chat-header">
         <h2>{{ clanName }} chat</h2>
@@ -21,6 +20,6 @@
         placeholder="Írj egy üzenetet..." 
         type="text" 
         />
-        <button (click)="sendMessage()" [disabled]="!newMessage.trim()">Küldés</button>
+        <button (click)="sendMessage()" [disabled]="!newMessage.trim()"><span class="button-text">Küldés</span></button>
     </div>
 </div>

@@ -23,4 +23,9 @@ button{
     color: #E0F7FA;
     font-size: 1.5rem;
     margin-bottom: 10px;
-    text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);}
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+}
+
+#update_user_button {
+    margin-bottom: 15px;
+}

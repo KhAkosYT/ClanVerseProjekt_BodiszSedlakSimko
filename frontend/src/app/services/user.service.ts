@@ -37,5 +37,11 @@ export class UserService {
         return this.http.post(`${this.apiUrl}/logout`,{});
     }
 
-    // Lórinak ide jöhet a profile oldal http kérései
+    getProfile(token: string): Observable<any> {
+        return this.http.get(`${this.apiUrl}/profile`, { headers: { 'Authorization': `Bearer ${token}`}})
+    }
+
+    updateProfile(userData: FormData, token: string): Observable<any> {
+        return this.http.put(`${this.apiUrl}/profile`, userData, { headers: { 'Authorization': `Bearer ${token}`}})
+}
 }

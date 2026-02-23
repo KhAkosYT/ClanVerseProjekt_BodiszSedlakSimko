@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UserService } from '../../services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -21,7 +23,7 @@ export class Profile implements OnInit {
   isEditing: boolean = false;
   selectedFile: File | null = null;
 
-  constructor(private http: HttpClient){
+  constructor(private userService: UserService, private router: Router){
     console.log("Profil component")
   }
 
@@ -31,7 +33,7 @@ export class Profile implements OnInit {
         'Authorization': `Bearer ${this.token}`
       });
 
-      this.http.get('http://localhost:3000/api/users/profile', {headers}).subscribe({
+      this.userService.getProfile(this.token).subscribe({
         next: (datas) => {
           const userDatas = datas as any;
 
@@ -85,7 +87,7 @@ export class Profile implements OnInit {
         formData.append('profilePicture', this.selectedFile);
       }
 
-      this.http.put('http://localhost:3000/api/users/profile', formData, {headers}).subscribe({
+      this.userService.updateProfile(formData, this.token).subscribe({
         next: (data) => {
           alert("Sikeresen frissítetted a profilodat!");
           console.log(data);

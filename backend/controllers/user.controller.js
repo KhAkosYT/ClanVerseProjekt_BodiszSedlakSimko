@@ -5,6 +5,7 @@ const config = require('../utils/config');
 const { createAccessToken } = require('../utils/jwt');
 
 const bcrypt = require('bcrypt');
+const { Op } = require('sequelize');
 
 exports.register = async (req, res, next) => {
     const { username, email, password } = req.body;
@@ -12,9 +13,18 @@ exports.register = async (req, res, next) => {
         return Code400(null, req, res, next, "Hiányzó adatok.");
     }
     try {
-        const existingUser = await Users.findOne({ where: { email } });
+        let existingUser = await Users.findOne({
+            where: {
+                [Op.or]: [
+                    { email: email },
+                    { username: username }
+                ]
+                }
+        });
+
         if(existingUser){
-            return Code409(null, req, res, next, "Már létezik ezzel az email címmel fiók.");
+            const message = existingUser.email === email ? "Már létezik ezzel az email címmel fiók." : "Ez a felhasználónév már foglalt.";
+            return Code409(null, req, res, next, message);
         }
 
         const hashedPassword = await bcrypt.hash(password, config.hashIterations);

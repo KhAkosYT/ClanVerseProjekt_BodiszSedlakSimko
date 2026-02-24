@@ -29,6 +29,7 @@ export class Clans implements OnInit {
   protected serverUploadUrl = environment.serverUploadUrl;
   private token = localStorage.getItem('token');
   error: string | null = null;
+  clans: any[] = [];
   games: any[] = [];
   editGameId: number | null = null;
   showEditModal: boolean = false;
@@ -43,37 +44,12 @@ export class Clans implements OnInit {
 
   ngOnInit(): void {
       this.clanService.getClans().subscribe({
-        next: (datas) => {
-          const clansData = datas as any[];
-          //console.log('Clans data received:', datas);
-          
-
-          const clansContainer = document.querySelector('.clans-container');
-          if (clansContainer) {
-            for (const clan of clansData) {
-              const cardDiv = document.createElement('div');
-              cardDiv.classList.add('card', 'clan-card-background');
-              cardDiv.setAttribute('style', 'width: 18rem; cursor: pointer;');
-              cardDiv.innerHTML = `
-                <div class="card-body">
-                  <h5 class="card-title" style="color: #E0F7FA;">${clan.name}</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary" style="color: #00f3ff !important;">${clan.gameName}</h6>
-                  <a class="card-link open-clan-link" style="color: white; text-decoration: none;">Részletek</a>
-                </div>
-                `;
-                const openClanLink = cardDiv.querySelector('.open-clan-link');
-              if (openClanLink){
-                openClanLink.addEventListener('click', () => this.fetchClanDetails(clan.id));
-              }
-              clansContainer.appendChild(cardDiv);
-            }
-          };
-
-          //document.body.appendChild(buttonDiv);
+        next: (data) => {
+          this.clans = data as any[];
         },
         error: (err) => {
           this.error = 'Hiba történt a kérés során: ' + err.message;
-          console.error('Hiba:', err);  
+          console.error('Hiba:', err);
         }
       });
   }

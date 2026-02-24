@@ -55,7 +55,7 @@
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(5px);
     color: #E0F7FA;
-    justify-content: center;
+    justify-content: flex-start;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -64,6 +64,9 @@
     min-width: 50vw;
     max-width: 95vw !important;
     margin: 0 auto;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 .clan-card-body{
     width: 80%;
@@ -253,4 +256,14 @@
 .buttons button {
     width: auto;
     margin: 0;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1;
 }

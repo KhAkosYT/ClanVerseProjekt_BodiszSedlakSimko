@@ -3,11 +3,17 @@
   <p class="welcome-subtitle call-to-action">Csatlakozz egy klánhoz, vagy hozz létre saját közösséget, és alakítsd te a játék jövőjét.</p>
 </div>
 <div class="clans-container">
-  
+  <div *ngFor="let clan of clans" class="card clan-card-background" style="width: 18rem; cursor: pointer;" (click)="fetchClanDetails(clan.id)">
+    <div class="card-body">
+      <h5 class="card-title" style="color: #E0F7FA;">{{ clan.name }}</h5>
+      <h6 class="card-subtitle mb-2 text-body-secondary" style="color: #00f3ff !important;">{{ clan.gameName }}</h6>
+      <a class="card-link" style="color: white; text-decoration: none;">Részletek</a>
+    </div>
+  </div>
 </div>
 <div *ngIf="clanData" class="modal-overlay">
-  <div class="modal-content clan-details-container" style="position: relative; max-height: 90vh; overflow-y: auto;">
-    <span (click)="closeClanDetails()" style="position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+  <div class="modal-content clan-details-container">
+    <span class="close-button" (click)="closeClanDetails()">&times;</span>
     <div class="clan-card-body">
     <h5 class="card-title">{{ clanData.name }}</h5>
     <h6 class="card-subtitle mb-2 text-body-secondary" style="color: #00f3ff !important;">{{ clanData.gameName }}</h6>

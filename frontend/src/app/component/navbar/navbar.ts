@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,7 +16,7 @@ export class Navbar implements OnInit {
   private token = localStorage.getItem("token");
   currentUrl: string = '';
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private adminService: AdminService, private router: Router) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.currentUrl = event.urlAfterRedirects;
@@ -33,11 +33,9 @@ export class Navbar implements OnInit {
   }
 
   fetchIsAdmin() {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.token}`
-    });
+    if( !this.token) return;
 
-    this.http.get('http://localhost:3000/api/admin/is-admin', { headers }).subscribe({
+    this.adminService.getIsAdmin(this.token).subscribe({
       next: (response) => {
         this.isAdmin = (response as any).isAdmin;
       },

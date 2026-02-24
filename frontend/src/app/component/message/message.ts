@@ -1,8 +1,8 @@
 import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { MessageService } from '../../services/messages.service';
 
 interface Message {
   sender: string;
@@ -13,7 +13,7 @@ interface Message {
 @Component({
   selector: 'app-messages',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule,],
   templateUrl: './message.html',
   styleUrl: './message.css'
 })
@@ -26,14 +26,16 @@ export class Messages implements OnInit, AfterViewChecked {
   messages: Message[] = [];
   newMessage: string = '';
   private shouldScroll = false;
-  private apiUrl = 'http://localhost:3000/api/messages';
+  token = localStorage.getItem('token');
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) {}
+  constructor(private messageService: MessageService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       this.clanId = params.get('clanId') || '';
-      this.loadMessages();
+      if (this.clanId) {
+        this.loadMessages();
+      }
     });
   }
 
@@ -44,16 +46,10 @@ export class Messages implements OnInit, AfterViewChecked {
     }
   }
 
-  private getHeaders() {
-    const token = localStorage.getItem('token');
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-  }
+   loadMessages() {
+    if(!this.token) return;
 
-  loadMessages() {
-    this.http.get<any>(`${this.apiUrl}/${this.clanId}`, { headers: this.getHeaders() })
+    this.messageService.getMessage(this.token, this.clanId)
       .subscribe({
         next: (data) => {
           this.clanName = data.clanName;
@@ -72,10 +68,9 @@ export class Messages implements OnInit, AfterViewChecked {
 
   sendMessage() {
     if (!this.newMessage.trim()) return;
+    if(!this.token) return;
 
-    const payload = { message: this.newMessage };
-
-    this.http.post(`${this.apiUrl}/${this.clanId}`, payload, { headers: this.getHeaders() })
+    this.messageService.createMessage(this.token, this.clanId, this.newMessage)
       .subscribe({
         next: () => {
           this.loadMessages();

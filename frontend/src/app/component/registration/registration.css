@@ -15,7 +15,8 @@ body {
   border-radius: 4px;
   width: 100%;
   max-width: 500px;
-  margin: 4rem auto;
+  margin: 5.5rem auto;
+  margin-bottom: 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -128,4 +129,34 @@ input[type="file"]::file-selector-button:hover {
   font-weight: 700;
   text-shadow: 0 0 5px rgba(255, 51, 51, 0.5);
   box-shadow: 0 0 15px rgba(255, 51, 51, 0.25);
+}
+
+.terms-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: #e0e6ed;
+  font-size: 0.9rem;
+}
+
+.terms-container input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  accent-color: #00f3ff;
+}
+
+.terms-container a {
+  color: #00f3ff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.terms-container a:hover {
+  color: #0066ff;
+  text-decoration: underline;
 }

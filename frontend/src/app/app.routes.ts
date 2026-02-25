@@ -58,5 +58,12 @@ export const routes: Routes = [
       .then(mod => mod.Admin);
     }
    },
+
+   { path: 'aszf',
+    loadComponent() {
+      return import('./component/aszf/aszf')
+      .then(mod => mod.Aszf);
+    }
+   },
    
 ];

@@ -6,6 +6,8 @@ const userController = require('../controllers/user.controller');
 const uploadPfp = require('../middleware/uploadPfp');
 const auth = require('../middleware/auth');
 
+usersRouter.get('/validate', auth, userController.validate);
+
 usersRouter.post('/register', uploadPfp, userController.register);
 
 usersRouter.post('/login', userController.login);

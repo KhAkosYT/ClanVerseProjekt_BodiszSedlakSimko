@@ -7,6 +7,10 @@ const { createAccessToken } = require('../utils/jwt');
 const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
 
+exports.validate = (req, res) => {
+    res.status(200).json({ valid: true, user: req.user });
+}
+
 exports.register = async (req, res, next) => {
     const { username, email, password } = req.body;
     if(!username || !email || !password){

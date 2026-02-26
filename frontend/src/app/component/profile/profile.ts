@@ -33,7 +33,7 @@ export class Profile implements OnInit {
         'Authorization': `Bearer ${this.token}`
       });
 
-      this.userService.getProfile(this.token).subscribe({
+      this.userService.getProfile().subscribe({
         next: (datas) => {
           const userDatas = datas as any;
 
@@ -87,7 +87,7 @@ export class Profile implements OnInit {
         formData.append('profilePicture', this.selectedFile);
       }
 
-      this.userService.updateProfile(formData, this.token).subscribe({
+      this.userService.updateProfile(formData).subscribe({
         next: (data) => {
           alert("Sikeresen frissítetted a profilodat!");
           console.log(data);

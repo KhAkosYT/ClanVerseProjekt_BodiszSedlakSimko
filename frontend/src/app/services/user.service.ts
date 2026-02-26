@@ -12,7 +12,7 @@ export class UserService {
     constructor(private http: HttpClient) { }
 
     showAuthModal = signal(false);
-    
+
     updateAuthStatus() {
         if (localStorage.getItem('token')) {
             this.showAuthModal.set(false);
@@ -21,6 +21,18 @@ export class UserService {
 
     triggerAuthError() {
         this.showAuthModal.set(true);
+    }
+
+    validateToken(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/validate`).pipe(
+            tap({
+                next: () => this.updateAuthStatus(),
+                error: () => {
+                    localStorage.removeItem('token');
+                    this.triggerAuthError();
+                }
+            })
+      );
     }
 
     register(userData: FormData): Observable<any> {
@@ -37,11 +49,11 @@ export class UserService {
         return this.http.post(`${this.apiUrl}/logout`,{});
     }
 
-    getProfile(token: string): Observable<any> {
-        return this.http.get(`${this.apiUrl}/profile`, { headers: { 'Authorization': `Bearer ${token}`}})
+    getProfile(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/profile`);
     }
 
-    updateProfile(userData: FormData, token: string): Observable<any> {
-        return this.http.put(`${this.apiUrl}/profile`, userData, { headers: { 'Authorization': `Bearer ${token}`}})
-}
+    updateProfile(userData: FormData): Observable<any> {
+        return this.http.put(`${this.apiUrl}/profile`, userData);
+    }
 }

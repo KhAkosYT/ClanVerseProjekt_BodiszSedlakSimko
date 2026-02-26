@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
 
 
 export const routes: Routes = [
@@ -32,6 +33,7 @@ export const routes: Routes = [
   },
 
    { path: 'createclan',
+    canActivate: [authGuard],
     loadComponent() {
       return import('./component/createclan/createclan')
       .then(mod => mod.Createclan);
@@ -39,6 +41,7 @@ export const routes: Routes = [
    },
 
    { path: 'message/:clanId',
+    canActivate: [authGuard],
     loadComponent() {
       return import('./component/message/message')
       .then(mod => mod.Messages);
@@ -46,13 +49,15 @@ export const routes: Routes = [
    },
 
    { path: 'profile',
+    canActivate: [authGuard],
     loadComponent() {
       return import('./component/profile/profile')
       .then(mod => mod.Profile);
     }
    },
-   
+
    { path: 'admin',
+    canActivate: [authGuard],
     loadComponent() {
       return import('./component/admin/admin')
       .then(mod => mod.Admin);
@@ -65,5 +70,5 @@ export const routes: Routes = [
       .then(mod => mod.Aszf);
     }
    },
-   
+
 ];

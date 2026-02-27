@@ -14,11 +14,22 @@ nav{
 .dropdown-menu {
     background-color: rgba(15, 23, 36, 0.95) !important;
     border: 1px solid rgba(0, 243, 255, 0.1);
-    right: 0 !important;
-    left: auto !important;
-    margin-right: 15px;
     padding: 10px;
     border-radius: 10px;
+}
+
+[aria-labelledby="filterDropdown"] {
+    width: max-content;
+    max-width: 90vw;
+    overflow-x: auto;
+}
+
+[aria-labelledby="filterDropdown"].show {
+    display: flex !important;
+    flex-direction: column;
+    flex-wrap: wrap;
+    max-height: 60vh;
+    align-content: flex-start;
 }
 
 .dropdown-item {
@@ -46,4 +57,8 @@ nav{
 }
 .logo:hover {
     transform: scale(1.05); 
+}
+
+.form-check-label {
+    color: #00f3ff !important;
 }

@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { GameService } from '../../services/game.service';
 import { ClanService } from '../../services/clan.service';
 import { UserService } from '../../services/user.service';
 import { environment } from '../../environments/environment';
+import { Subscription } from 'rxjs';
 
 
 interface Member {
@@ -22,13 +23,16 @@ interface Member {
   encapsulation: ViewEncapsulation.None
 })
 
-export class Clans implements OnInit {
+export class Clans implements OnInit, OnDestroy {
 
   constructor(private clanService: ClanService, private gameService: GameService, private router: Router, private userService: UserService) {}
 
   protected serverUploadUrl = environment.serverUploadUrl;
   private token = localStorage.getItem('token');
   error: string | null = null;
+  allClans: any[] = [];
+  private filterSubscription: Subscription | undefined;
+  private selectedGameIds: number[] = [];
   clans: any[] = [];
   games: any[] = [];
   editGameId: number | null = null;
@@ -43,9 +47,15 @@ export class Clans implements OnInit {
 
 
   ngOnInit(): void {
+      this.filterSubscription = this.gameService.selectedGameIds$.subscribe(selectedIds => {
+        this.selectedGameIds = selectedIds;
+        this.applyFilter();
+      });
+
       this.clanService.getClans().subscribe({
         next: (data) => {
-          this.clans = data as any[];
+          this.allClans = data as any[];
+          this.applyFilter();
         },
         error: (err) => {
           this.error = 'Hiba történt a kérés során: ' + err.message;
@@ -54,6 +64,20 @@ export class Clans implements OnInit {
       });
   }
 
+  ngOnDestroy(): void {
+    if (this.filterSubscription) {
+      this.filterSubscription.unsubscribe();
+    }
+    this.gameService.updateSelectedGames([]);
+  }
+
+  applyFilter(): void {
+    if (this.selectedGameIds && this.selectedGameIds.length > 0) {
+      this.clans = this.allClans.filter(clan => this.selectedGameIds.includes(clan.gameId));
+    } else {
+      this.clans = this.allClans;
+    }
+  }
 
   fetchClanDetails(clanId: string): void {
     if (this.token) {

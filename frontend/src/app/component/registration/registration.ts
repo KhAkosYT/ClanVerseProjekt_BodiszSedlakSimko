@@ -18,6 +18,7 @@ export class Registration {
   confirmPassword: string = '';
   profilePicture: File | null = null;
   errorMessage: string = '';
+  acceptTerms: boolean = false;
 
   constructor(private userService: UserService, private router: Router) {}
 

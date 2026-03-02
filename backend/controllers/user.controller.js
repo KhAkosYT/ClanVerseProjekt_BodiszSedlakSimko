@@ -16,6 +16,11 @@ exports.register = async (req, res, next) => {
     if(!username || !email || !password){
         return Code400(null, req, res, next, "Hiányzó adatok.");
     }
+
+    if(password.length < 8){
+        return Code400(null, req, res, next, "A jelszónak legalább 8 karakter hosszúnak kell lennie.");
+    }
+    
     try {
         let existingUser = await Users.findOne({
             where: {

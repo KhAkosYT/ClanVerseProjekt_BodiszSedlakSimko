@@ -5,7 +5,7 @@ const sequelize = require('./database/sequelize');
 const config = require('./utils/config');
 
 
-//seed import(-ok) //? Még nem tudom, hogy egy fájlban lesz-e minden seed, vagy minden táblára lesz külön-külön
+//seed import(-ok)
 const seedGames = require('./seeds/gamesSeed');
 const seedUsers = require('./seeds/usersSeed');
 const seedClans = require('./seeds/clansSeed');
@@ -15,9 +15,6 @@ const seedMessages = require('./seeds/messagesSeed');
 //App import-ok
 const express = require('express');
 const cors = require('cors');
-const bcrypt = require('bcrypt');
-const { Op } = require('sequelize');
-const { path } = require('path');
 
 //routerek
 const usersRouter = require('./routes/user.routes');

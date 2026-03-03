@@ -20,7 +20,7 @@ exports.register = async (req, res, next) => {
     if(password.length < 8){
         return Code400(null, req, res, next, "A jelszónak legalább 8 karakter hosszúnak kell lennie.");
     }
-    
+
     try {
         let existingUser = await Users.findOne({
             where: {
@@ -102,9 +102,17 @@ exports.updateProfile = async (req, res, next) => {
     }
 
     if(newUserName && newUserName != userData.username){
+        const existingUser = await Users.findOne({ where: { username: newUserName } });
+        if(existingUser){
+            return Code409(null, req, res, next, "Ez a felhasználónév már foglalt.");
+        }
         userData.username = newUserName;
     }
     if(newEmail && newEmail != userData.email){
+        const existingUser = await Users.findOne({ where: { email: newEmail } });
+        if(existingUser){
+            return Code409(null, req, res, next, "Ez az email cím már foglalt.");
+        }
         userData.email = newEmail;
     }
     if(isPasswordValid && newPass && newPass != currPass){

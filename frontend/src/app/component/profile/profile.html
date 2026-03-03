@@ -37,6 +37,9 @@
             <label for="confirm_new_password">Új jelszó megerősítése:</label>
             <input type="password" id="confirm_new_password" name="confirm_new_password" [(ngModel)]="confirm_new_password">
         </div>
+        <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+        </div>
         <button type="button" class="btn btn-primary" id="update_user_button" (click)="updateProfile()">Mentés</button>
         <button type="button" class="btn btn-secondary" (click)="toggleEditMode()">Mégse</button>
     </form>

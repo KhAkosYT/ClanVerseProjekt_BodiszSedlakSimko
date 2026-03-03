@@ -22,6 +22,7 @@ export class Profile implements OnInit {
   confirm_new_password: string ="";
   isEditing: boolean = false;
   selectedFile: File | null = null;
+  errorMessage: string = '';
 
   constructor(private userService: UserService, private router: Router){
     console.log("Profil component")
@@ -62,6 +63,7 @@ export class Profile implements OnInit {
       this.new_password = "";
       this.confirm_new_password = "";
       this.selectedFile = null;
+      this.errorMessage = '';
     }
   }
 
@@ -70,9 +72,10 @@ export class Profile implements OnInit {
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${this.token}`
       });
+      this.errorMessage = '';
 
       if(this.new_password != this.confirm_new_password){
-        alert("Nem egyezik az új jelszó a megerősítő jelszóval");
+        this.errorMessage = "Nem egyezik az új jelszó a megerősítő jelszóval!";
         return;
       }
 
@@ -95,6 +98,7 @@ export class Profile implements OnInit {
         },
         error:(error)=> {
           console.error("Hiba a profil frissítése során", error);
+          this.errorMessage = error.error.reason || error.error.message || 'Hiba történt a profil frissítése során.';
         }
       })
     }

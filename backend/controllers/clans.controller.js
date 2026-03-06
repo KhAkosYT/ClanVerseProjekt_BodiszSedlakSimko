@@ -173,6 +173,10 @@ exports.updateClan = async (req, res, next) => {
         if(newClanName && newClanName != clan.name ){
             clan.name = newClanName;
         }
+        const existingClan = await Clans.findOne({ where: { name: newClanName }});
+        if(existingClan){
+            return Code409("Már létezik ilyen néven klán.", req, res, next);
+        }
         if(newClanGame && newClanGame != clan.gameId){
             clan.gameId = newClanGame;
         }
@@ -269,7 +273,7 @@ exports.kickMember = async (req, res, next) => {
 
         const isLeader = await ClanMembers.findOne({ where: { clanId: id, userId: userId, role: 'leader'}});
         if(!isLeader){
-            return Code401("Nincs jogosultságod a tagok kirúgásához", req, res, next);
+            return Code403("Nincs jogosultságod a tagok kirúgásához", req, res, next);
         }
 
         const user = await Users.findOne({ where: { username: memberUserName } });

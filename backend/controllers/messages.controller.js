@@ -3,7 +3,7 @@ const Clans = require("../models/clans");
 const ClanMessages = require("../models/messages");
 const Users = require("../models/users");
 
-const { Code403, Code404, Code500 } = require('../utils/statusCode');
+const { Code403, Code404, Code500, Code400 } = require('../utils/statusCode');
 
 exports.getMessagesByClanId = async (req, res, next) => {
     try {
@@ -48,8 +48,11 @@ exports.createMessageByClanId = async (req, res, next) => {
         const { clanId } = req.params;
         const { userId } = req.user;
 
-        //! FONTOS HOGY NE LEGYEN ELIRAS A FRONTENDEN.
         const message = req.body.message;
+
+        if(!message){
+            return Code400("Hiányzó adatok", req, res, next);
+        }
 
         const isMember = await ClanMembers.findOne({ where: { clanId: clanId, userId: userId }});
         if(!isMember){
@@ -64,7 +67,7 @@ exports.createMessageByClanId = async (req, res, next) => {
 
         ClanMessages.create({ clanId: clanId, userId: userId, text: message });
 
-        res.status(200).json({ message: "Sikeres üzenetküldés "});
+        res.status(201).json({ message: "Sikeres üzenetküldés "});
 
     }catch(err){
         console.error("Hiba történt az üzenet elküldése során");

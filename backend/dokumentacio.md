@@ -195,11 +195,11 @@ ___
 
 ___
 
-12. **/api/clans/:id/kick/:memberUserId** <br>
+12. **/api/clans/:id/kick/:memberUsername** <br>
 <ins>**Elvárt értékek**</ins>, amiket kér az api végpont
 
 - id (URL paraméter; a klán azonosítója)
-- memberUserId (URL paraméter; a kirúgni kívánt felhasználó azonosítója)
+- memberUsername (URL paraméter; a kizárni kívánt felhasználó neve)
 - userId (a tokenből kerül kiolvasásra)
 
 - HTTP **POST** metódus
@@ -207,12 +207,12 @@ ___
 - A rendszer ellenőrzi, hogy a kérést indító felhasználó a klán **Leader-e**. Ha nem, **403-as státuszkóddal** és **"Nincs jogosultságod a klán tagjainak kirúgásához" MESSAGE-el** tér vissza
 - Ha a célszemély **nem tagja a klánnak**, akkor **404-es státuszkóddal** és **"A megadott felhasználó nem tagja a klánnak" MESSAGE-el** tér vissza
 - **Vezetőt nem lehet kirúgni**: ha a célszemély role-ja **"leader"**, akkor **403-as státuszkóddal** és **"Nem tudod kirúgni a klán vezetőjét" MESSAGE-el** tér vissza
-- Sikeres törlés esetén **200-as státuszkóddal** és **"Sikeresen kirúgtad a tagot a klánból" MESSAGE-el** tér vissza
+- Sikeres törlés esetén **200-as státuszkóddal** és **"Sikeresen kizártad a tagot a klánból" MESSAGE-el** tér vissza
 - Hiba esetén (adatbázis hiba) **500-as státuszkóddal** tér vissza
 
 ___
 
-13.  **/api/messages/:clanId** <br>
+1.   **/api/messages/:clanId** <br>
 <ins>**Elvárt értékek**</ins>, amiket kér az api végpont
 
 - clanId (URL paraméter)

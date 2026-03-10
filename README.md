@@ -58,16 +58,15 @@ A **ClanVerse** egy webalapú közösségi platform, amellyel gamer közössége
 - **Operációs rendszer:** Windows 10, macOS 10.15, Linux (Ubuntu 20.04 vagy újabb)
 - **Memória:** 2 GB RAM
 - **Tárhely:** 500 MB szabad hely
-- **Node.js:** 18.0.0 vagy újabb
-- **npm/yarn:** 8.0.0 vagy újabb
+- **Node.js:** 22.3.0 vagy újabb
+- **npm/yarn:** 10.0.0 vagy újabb
 
 ### Ajánlott követelmények:
 - **Operációs rendszer:** Windows 11, macOS 12 vagy újabb, Linux (Ubuntu 22.04)
 - **Memória:** 4 GB RAM vagy több
 - **Tárhely:** 1 GB szabad hely
-- **Node.js:** 20.0.0 vagy újabb
-- **npm/yarn:** 10.0.0 vagy újabb
-- **Adatbázis szerver:** MariaDB 10.5+
+- **Node.js:** 22.19.0 vagy újabb
+- **npm/yarn:** 11.8.0 vagy újabb
 
 ---
 
@@ -122,8 +121,9 @@ A **ClanVerse** egy webalapú közösségi platform, amellyel gamer közössége
 
 ### 1. Előfeltételek
 Győződj meg róla, hogy telepítve van:
-- [Node.js](https://nodejs.org/) (18.0.0 vagy újabb)
+- [Node.js](https://nodejs.org/) (22.0.0 vagy újabb)
 - [XAMPP](https://www.apachefriends.org/hu/index.html) (8.2 vagy újabb)
+- [Visual Studio Code](https://code.visualstudio.com/)
 - [Github Desktop](https://desktop.github.com/download/) vagy [Github oldal](https://github.com/)
 
 ### 2. Projekt klónozása
@@ -158,7 +158,7 @@ npm install
 -    + CategoryInfo          : SecurityError: (:) [], PSSecurityException
 -    + FullyQualifiedErrorId : UnauthorizedAccess
 ```
-Ezt a hibát 2 módon tudod orvosolni:
+Ezt a hibát 2 módon tudod orvosolni: <br/>
 **1) átváltod** a terminal-t **powershell**-ről **cmd**-re (Command Prompt): ebben az esetben ismét be kell lépned a backend mappába.
 ```bash
 cd backend
@@ -191,6 +191,7 @@ ClanVerseProjekt_BodiszSedlakSimko/
 ```sql
 CREATE DATABASE clanverse;
 ```
+- Ha beillesztetted az alábbi kódot, nyomd meg a jobb alsó sarokban az **Indítás** gombot (vagy Ctrl + Enter-t ahova beírtad az SQL kódot)
 
 #### d) Backend szerver elindítása
 Ha telepítetted a csomagokat, létrehoztad az adatbázist, akkor lépj vissza a VSCode-ba és a terminal-ba írd be a következőt:
@@ -198,7 +199,7 @@ Ha telepítetted a csomagokat, létrehoztad az adatbázist, akkor lépj vissza a
   ```bash
   node server.js
   ```
-- Ha telefonon is meg szeretnéd nyitni, akkor:
+- Ha telefonon is meg szeretnéd nyitni, akkor <a id="serverAllPortLink"></a>:
   ```bash
   node serverAllPort.js
   ```
@@ -225,7 +226,11 @@ Ezzel sikeresen elindítottad a szervert.
 
 #### a) Függőségek telepítése
 Ctrl + Shift + ö paranccsal nyiss ismét egy terminal-t.
-A következő paranccsal belépsz a frontend mappába és letöltöd a csomagokat:
+Minden előtt le kell telepítened az Angular-t az alábbi paranccsal:
+```bash
+npm install -g @angular/cli@20.3
+```
+Ha ez letöltött, következő paranccsal belépsz a frontend mappába és letöltöd a csomagokat:
 ```bash
 cd frontend
 npm install
@@ -240,9 +245,8 @@ ng serve
 Az alkalmazás elérhető a `http://localhost:4200` címen.
 
 **Ha telefonon szeretnéd megnyitni az alkalmazást**:
-- Először az `ipconfig` paranccsal nézd meg a számítógéped IPv4 címét. *(pl: 192.168.1.5)*
+- Először az `ipconfig` paranccsal nézd meg a számítógéped IPv4 címét. *(pl: 192.168.1.67)*
 - Ezt az IP címet írd be az **environment.ts** fájlba mind a 2 **"localhost"** helyére.
-- 
 ```
 ClanVerseProjekt_BodiszSedlakSimko/
 ├── frontend/
@@ -251,6 +255,28 @@ ClanVerseProjekt_BodiszSedlakSimko/
 │   │   │   ├── environments/
 │   │   │   │   └── environment.ts    # Ebben a fájlban kell átírni
 ```
+- Így kell kinéznie az environment.ts-nek:
+```ts
+export const environment = {
+    production: false,
+    apiUrl:'http://192.168.1.5:3000/api',  // Minden futtatás előtt ellenőrizni kell a szervert futtató számítógép IP címét!
+    serverUploadUrl: 'http://192.168.1.5:3000/uploads/' // Minden futtatás előtt ellenőrizni kell a szervert futtató számítógép IP címét!
+};
+```
+- Ha az environment-et beállítottad, az alábbi paranccsal futtathatod minden porton az angulart:
+```bash
+ng serve --host 0.0.0.0
+```
+- A konzol alján meg fog jelenni 2 URL. **1 local és 1 network**
+- Például:
+```bash
+  ➜  Local:   http://localhost:4200/       # csak az adott számítógép
+  ➜  Network: http://192.168.1.67:4200/    # adott hálózaton belüli kommunikáció (LAN).
+```
+- Ha telefonon szeretnéd megnyitni, akkor neked az IP címet kell beírni a telefonod böngészőjébe.
+> [!IMPORTANT]
+> Ahhoz, hogy **használni tudd telefonon**, a **[serverAllPort.js](#serverAllPortLink) szervert kell futtatnod!**
+> Valamint a **telefonodnak ugyan azon a hálózaton kell lennie**, mint a **szervvert futtató számítógépnek!** (Nem számít, hogy a PC vezetékesen csatlakozik, csak az, hogy "ugyan azon a router-en" legyenek az eszközök)
 
 ## 📡 Backend API Dokumentáció
 

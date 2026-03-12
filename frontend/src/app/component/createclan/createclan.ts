@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, Router } from "@angular/router";
+import { Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from '@angular/common';
 import { ClanService } from '../../services/clan.service'; 
@@ -8,7 +8,7 @@ import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-createclan',
-  imports: [RouterLink, FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './createclan.html',
   styleUrl: './createclan.css'
 })
